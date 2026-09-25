@@ -1,0 +1,336 @@
+{
+  "projectName": "my-enterprise-stlc-project",
+  "architecture": "epam-stlc-multi-agent",
+  "orchestrationMode": "single-orchestrator-with-subagents",
+  "liveIntegrationsEnabled": false,
+  "approvalMode": "human-in-the-loop",
+  "artifactsRoot": "artifacts",
+  "workflowRoot": "workflow",
+  "workflowDefinition": "workflow/STLCWorkflowOrchestrator.java",
+  "commandRoot": ".claude/commands",
+  "orchestratorAgent": ".claude/agents/stlc-orchestrator-agent.md",
+  "mcpBindings": {
+    "jira": ".claude/config/mcp/jira_mcp_config.json",
+    "github": ".claude/config/mcp/github_mcp_config.json"
+  },
+  "agentRoot": ".claude/agents",
+  "hookRoot": ".claude/hooks",
+  "skillRoot": ".claude/skills",
+  "commandPackagePolicy": {
+    "useCommandsAsEntryPoints": true,
+    "useSkillToolForReusableSkills": true,
+    "doNotReadSkillFilesDirectlyFromCommands": true
+  },
+  "approvalGates": [
+    "design-approval",
+    "execution-approval"
+  ],
+  "securityPosture": {
+    "defaultExternalMutation": "blocked",
+    "requiresHumanApprovalFor": [
+      "jira-read-live",
+      "repository-write",
+      "test-execution",
+      "security-scan",
+      "pull-request-creation",
+      "jira-sync"
+    ],
+    "secretHandling": "references-only",
+    "evidenceArtifactsRequired": true
+  },
+  "liveDemo": {
+    "scenario": "Jira story to closure with placeholder integrations",
+    "entrypointAgent": "stlc-orchestrator-agent",
+    "entrypointCommand": ".claude/commands/stlc.md",
+    "entryArtifact": "artifacts/requirement_analysis.md",
+    "finalArtifact": "artifacts/test_closure_metrics.md"
+  },
+  "storyReusePolicy": {
+    "detectExistingGeneratedTestsBy": [
+      "jiraIssueKey",
+      "storyTraceabilityMarkers",
+      "existingArtifactMappings"
+    ],
+    "whenExistingTestsFound": {
+      "route": "stage-04b-execution-only",
+      "skipStages": [
+        "stage-02",
+        "stage-03",
+        "stage-04"
+      ],
+      "skipSubAgents": [
+        "qa-strategist-agent",
+        "qa-sentinel-agent",
+        "engineer-agent"
+      ],
+      "artifact": "artifacts/test_execution_report.md"
+    },
+    "whenNoExistingTestsFound": {
+      "route": "stage-02",
+      "continueNormalFlow": true
+    }
+  },
+  "commands": {
+    "phase-00": ".claude/commands/mcp-preflight.md",
+    "pipeline": ".claude/commands/stlc.md",
+    "stage-01": ".claude/commands/01-requirements-analysis.md",
+    "stage-02": ".claude/commands/02-test-planning.md",
+    "stage-03": ".claude/commands/03-test-design.md",
+    "stage-04a": ".claude/commands/04a-engineering.md",
+    "stage-04b": ".claude/commands/04b-execution.md",
+    "stage-05": ".claude/commands/05-security-gate.md",
+    "stage-06": ".claude/commands/06-pr-review.md",
+    "stage-07": ".claude/commands/07-hitl-gate.md",
+    "stage-08": ".claude/commands/08-closure-sync.md"
+  },
+  "subAgents": {
+    "stage-01": ".claude/agents/1. triage-agent.md",
+    "stage-02": ".claude/agents/2. qa-strategist-agent.md",
+    "stage-03": ".claude/agents/3. qa-sentinel-agent.md",
+    "stage-04": ".claude/agents/4a. engineer-agent.md",
+    "stage-04-execution": ".claude/agents/4b. qa-runner-agent.md",
+    "stage-05": ".claude/agents/5. security-gate-agent.md",
+    "stage-06": ".claude/agents/6. github-mcp-agent.md",
+    "stage-07": ".claude/agents/7. hitl-gate-agent.md",
+    "stage-08": ".claude/agents/8. reporting-closure-agent.md"
+  },
+  "executionContracts": {
+    "stlc-orchestrator-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/artifact_contract_guard.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/mcp-preflight.md",
+        ".claude/commands/stlc.md"
+      ],
+      "subagents": [
+        "triage-agent",
+        "qa-strategist-agent",
+        "qa-sentinel-agent",
+        "engineer-agent",
+        "qa-runner-agent",
+        "security-gate-agent",
+        "github-mcp-agent",
+        "hitl-gate-agent",
+        "reporting-closure-agent"
+      ]
+    },
+    "triage-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/01-requirements-analysis.md"
+      ],
+      "skills": [
+        ".claude/skills/jira-parser.md"
+      ]
+    },
+    "qa-strategist-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/02-test-planning.md"
+      ],
+      "skills": [
+        ".claude/skills/test-planning-strategist.md"
+      ]
+    },
+    "qa-sentinel-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/03-test-design.md"
+      ],
+      "skills": [
+        ".claude/skills/bdd-generator.md"
+      ]
+    },
+    "engineer-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/04a-engineering.md"
+      ],
+      "skills": [
+        ".claude/skills/execution-evidence-writer.md"
+      ]
+    },
+    "qa-runner-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/04b-execution.md"
+      ],
+      "skills": [
+        ".claude/skills/execution-evidence-writer.md"
+      ]
+    },
+    "security-gate-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/05-security-gate.md"
+      ],
+      "skills": [
+        ".claude/skills/security-compliance-review.md"
+      ]
+    },
+    "github-mcp-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/06-pr-review.md"
+      ],
+      "skills": [
+        ".claude/skills/pr-review-prep.md"
+      ]
+    },
+    "hitl-gate-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/07-hitl-gate.md"
+      ],
+      "skills": [
+        ".claude/skills/hitl-audit-writer.md"
+      ]
+    },
+    "reporting-closure-agent": {
+      "preHooks": [
+        ".claude/hooks/pre_stage_validation.py",
+        ".claude/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".claude/commands/08-closure-sync.md"
+      ],
+      "skills": [
+        ".claude/skills/execution-evidence-writer.md",
+        ".claude/skills/hitl-audit-writer.md"
+      ]
+    }
+  },
+  "artifacts": {
+    "stage-01": "artifacts/requirement_analysis.md",
+    "stage-02": "artifacts/test_planning.md",
+    "stage-03": "artifacts/test_design.md",
+    "stage-04": "artifacts/test_execution_report.md",
+    "stage-05": "artifacts/security_compliance_report.md",
+    "stage-06": "artifacts/pr_review_summary.md",
+    "stage-07": "artifacts/hitl_audit_trail.md",
+    "stage-08": "artifacts/test_closure_metrics.md"
+  },
+  "stages": [
+    {
+      "id": "stage-01",
+      "name": "Requirements Analysis & Triage",
+      "subagentPath": ".claude/agents/1. triage-agent.md",
+      "commandPath": ".claude/commands/01-requirements-analysis.md",
+      "agent": "triage-agent",
+      "artifact": "artifacts/requirement_analysis.md",
+      "routingDecisions": {
+        "reuse-existing-tests": "stage-04b-execution-only",
+        "generate-new-tests": "stage-02"
+      },
+      "mcpDependencies": [
+        "jira"
+      ],
+      "handoff": "stage-02",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-02",
+      "name": "Test Planning & Strategy",
+      "subagentPath": ".claude/agents/2. qa-strategist-agent.md",
+      "commandPath": ".claude/commands/02-test-planning.md",
+      "agent": "qa-strategist-agent",
+      "artifact": "artifacts/test_planning.md",
+      "handoff": "stage-03",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-03",
+      "name": "Test Case Design & Generation",
+      "subagentPath": ".claude/agents/3. qa-sentinel-agent.md",
+      "commandPath": ".claude/commands/03-test-design.md",
+      "agent": "qa-sentinel-agent",
+      "artifact": "artifacts/test_design.md",
+      "handoff": "stage-04",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-04",
+      "name": "Development & Self-Healing Execution",
+      "subagentPath": ".claude/agents/4a. engineer-agent.md",
+      "commandPath": ".claude/commands/04a-engineering.md",
+      "agent": "engineer-agent",
+      "executionAgent": "qa-runner-agent",
+      "executionCommandPath": ".claude/commands/04b-execution.md",
+      "artifact": "artifacts/test_execution_report.md",
+      "handoff": "stage-05",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-05",
+      "name": "Security & Compliance Gate",
+      "subagentPath": ".claude/agents/5. security-gate-agent.md",
+      "commandPath": ".claude/commands/05-security-gate.md",
+      "agent": "security-gate-agent",
+      "artifact": "artifacts/security_compliance_report.md",
+      "handoff": "stage-06",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-06",
+      "name": "GitHub PR Creation & Automated Code Review",
+      "subagentPath": ".claude/agents/6. github-mcp-agent.md",
+      "commandPath": ".claude/commands/06-pr-review.md",
+      "agent": "github-mcp-agent",
+      "artifact": "artifacts/pr_review_summary.md",
+      "mcpDependencies": [
+        "github"
+      ],
+      "handoff": "stage-07",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-07",
+      "name": "Human-in-the-Loop Approval Gate",
+      "subagentPath": ".claude/agents/7. hitl-gate-agent.md",
+      "commandPath": ".claude/commands/07-hitl-gate.md",
+      "agent": "hitl-gate-agent",
+      "artifact": "artifacts/hitl_audit_trail.md",
+      "handoff": "stage-08",
+      "requiresHumanApprovalBeforeStart": false
+    },
+    {
+      "id": "stage-08",
+      "name": "Test Closure & Jira Sync",
+      "subagentPath": ".claude/agents/8. reporting-closure-agent.md",
+      "commandPath": ".claude/commands/08-closure-sync.md",
+      "agent": "reporting-closure-agent",
+      "artifact": "artifacts/test_closure_metrics.md",
+      "mcpDependencies": [
+        "jira"
+      ],
+      "requiresHumanApprovalBeforeStart": true
+    }
+  ]
+}

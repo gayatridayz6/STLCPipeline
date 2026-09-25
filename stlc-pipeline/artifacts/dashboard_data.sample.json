@@ -1,0 +1,120 @@
+{
+  "story": {
+    "jiraIssueKey": "QA-1234",
+    "title": "STLC Pipeline Demo Story",
+    "routingDecision": "reuse-existing-tests",
+    "routeReason": "Existing generated tests were found for the same Jira story key and traceability markers.",
+    "status": "Execution Summary Only"
+  },
+  "pipeline": {
+    "orchestrator": "stlc-orchestrator-agent",
+    "startedAt": "2026-09-24T10:00:00Z",
+    "lastUpdatedAt": "2026-09-24T10:18:00Z",
+    "completedStages": 4,
+    "totalStages": 8,
+    "blocked": false
+  },
+  "mcp": [
+    {
+      "name": "Jira",
+      "status": "Connected",
+      "mode": "Placeholder Demo"
+    },
+    {
+      "name": "GitHub",
+      "status": "Standby",
+      "mode": "Placeholder Demo"
+    }
+  ],
+  "hitl": [
+    {
+      "stage": "Stage 1",
+      "gate": "Design Approval",
+      "decision": "Approved",
+      "actor": "QA Lead",
+      "timestamp": "2026-09-24T10:03:00Z"
+    },
+    {
+      "stage": "Stage 4b",
+      "gate": "Execution Approval",
+      "decision": "Approved",
+      "actor": "QA Manager",
+      "timestamp": "2026-09-24T10:12:00Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "Requirement Analysis",
+      "path": "artifacts/requirement_analysis.md",
+      "status": "Updated"
+    },
+    {
+      "name": "Execution Report",
+      "path": "artifacts/test_execution_report.md",
+      "status": "Updated"
+    },
+    {
+      "name": "HITL Audit Trail",
+      "path": "artifacts/hitl_audit_trail.md",
+      "status": "Updated"
+    }
+  ],
+  "tokenUsage": {
+    "source": "sample",
+    "note": "Replace with runtime telemetry when the executor exposes real usage.",
+    "promptTokens": 14820,
+    "completionTokens": 6120,
+    "totalTokens": 20940,
+    "estimatedCostUsd": 0.18,
+    "byAgent": [
+      {
+        "agent": "stlc-orchestrator-agent",
+        "tokens": 4850
+      },
+      {
+        "agent": "triage-agent",
+        "tokens": 6020
+      },
+      {
+        "agent": "qa-runner-agent",
+        "tokens": 3910
+      },
+      {
+        "agent": "hitl-gate-agent",
+        "tokens": 1160
+      }
+    ]
+  },
+  "stages": [
+    {
+      "name": "Stage 1",
+      "agent": "triage-agent",
+      "state": "completed",
+      "summary": "Detected existing generated tests for the Jira story."
+    },
+    {
+      "name": "Stage 2",
+      "agent": "qa-strategist-agent",
+      "state": "skipped",
+      "summary": "Skipped due to story reuse policy."
+    },
+    {
+      "name": "Stage 3",
+      "agent": "qa-sentinel-agent",
+      "state": "skipped",
+      "summary": "Skipped to avoid duplicate test generation."
+    },
+    {
+      "name": "Stage 4b",
+      "agent": "qa-runner-agent",
+      "state": "completed",
+      "summary": "Execution summary produced from existing automation."
+    },
+    {
+      "name": "Stage 5",
+      "agent": "security-gate-agent",
+      "state": "pending",
+      "summary": "Waiting for downstream demo path."
+    }
+  ]
+}

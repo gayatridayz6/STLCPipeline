@@ -1,0 +1,11 @@
+{
+  "server": "jira",
+  "enabled": false,
+  "baseUrl": "<jira-base-url>",
+  "projectKey": "<jira-project-key>",
+  "auth": {
+    "mode": "<oauth-or-token>",
+    "secretRef": "<jira-secret-ref>"
+  },
+  "usage": "Stage 1 requirement ingestion and Stage 8 closure sync"
+}

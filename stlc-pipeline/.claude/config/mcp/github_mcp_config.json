@@ -1,0 +1,11 @@
+{
+  "server": "github",
+  "enabled": false,
+  "owner": "<github-owner>",
+  "repo": "<github-repo>",
+  "auth": {
+    "mode": "token",
+    "secretRef": "<github-secret-ref>"
+  },
+  "usage": "Stage 6 PR creation and automated code review"
+}
