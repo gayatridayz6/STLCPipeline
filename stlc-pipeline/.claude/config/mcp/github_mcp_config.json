@@ -1,11 +1,11 @@
 {
   "server": "github",
-  "enabled": false,
-  "owner": "<github-owner>",
-  "repo": "<github-repo>",
+  "enabled": true,
+  "owner": "gayatridayz6",
+  "repo": "STLCPipeline",
   "auth": {
     "mode": "token",
-    "secretRef": "<github-secret-ref>"
+    "secretRef": "GITHUB_TOKEN"
   },
   "usage": "Stage 6 PR creation and automated code review"
 }

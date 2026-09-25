@@ -1,11 +1,11 @@
 {
   "server": "jira",
-  "enabled": false,
-  "baseUrl": "<jira-base-url>",
-  "projectKey": "<jira-project-key>",
+  "enabled": true,
+  "baseUrl": "https://jiraeu.epam.com",
+  "projectKey": "EPMCDMETST",
   "auth": {
-    "mode": "<oauth-or-token>",
-    "secretRef": "<jira-secret-ref>"
+    "mode": "token",
+    "secretRef": "JIRA_TOKEN"
   },
   "usage": "Stage 1 requirement ingestion and Stage 8 closure sync"
 }
