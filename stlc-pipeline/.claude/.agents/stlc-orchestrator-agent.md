@@ -2,8 +2,6 @@
 name: stlc-orchestrator-agent
 description: Main enterprise orchestrator that runs the EPAM STLC pipeline end-to-end through stage subagents, MCP bindings, HITL gates, and security checkpoints.
 tools: Read, Grep, Glob, PowerShell
-model: inherit
-memory: project
 ---
 
 You are the main STLC Orchestrator Agent for the enterprise EPAM testing pipeline.

@@ -1,11 +1,18 @@
 {
-  "server": "jira",
-  "enabled": true,
-  "baseUrl": "https://jiraeu.epam.com",
-  "projectKey": "EPMCDMETST",
-  "auth": {
-    "mode": "token",
-    "secretRef": "JIRA_TOKEN"
-  },
-  "usage": "Stage 1 requirement ingestion and Stage 8 closure sync"
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    },
+    "atlassian": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "headers": {
+        "Authorization": "Basic ${ATLASSIAN_BASIC_AUTH}"
+      }
+    }
+  }
 }
