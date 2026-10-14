@@ -1,28 +1,28 @@
 ## Local STLC execution
 
-The Python runner in `workflow\run_stlc.py` makes the stage graph resumable without
-requiring Claude Code. It **does not invoke AI agents or simulate test results**.
-Author each stage's Markdown with the corresponding agent in this chat (or another
-approved runtime), review it, and then hand it to the runner.
+The Python runner in `stlc-pipeline\workflow\run_stlc.py` makes the stage graph resumable without
+requiring a Copilot runtime. It **does not invoke AI agents or simulate test
+results**. Author each stage's Markdown with the corresponding Copilot agent (or
+another approved runtime), review it, and then hand it to the runner.
 
-Use Python 3 from `stlc-pipeline`:
+Run these commands from the repository root with Python 3:
 
 ```powershell
-python workflow\run_stlc.py start --ticket EPMCDMETST-66524 --input-file artifacts\inputs\EPMCDMETST-66524.txt
-python workflow\run_stlc.py status --ticket EPMCDMETST-66524
+python stlc-pipeline\workflow\run_stlc.py start --ticket EPMCDMETST-66524 --input-file stlc-pipeline\artifacts\inputs\EPMCDMETST-66524.txt
+python stlc-pipeline\workflow\run_stlc.py status --ticket EPMCDMETST-66524
 ```
 
 The input file is an offline copy of requirements, **not a verified Jira read**.
 If the configured Jira endpoint is unavailable, do not assert Jira status, links,
 or remote execution evidence. `start` runs configuration/artifact/approval hooks
-and records the input under `artifacts\runs\<ticket>\requirements.txt`.
+and records the input under `stlc-pipeline\artifacts\runs\<ticket>\requirements.txt`.
 
 After the human explicitly approves the current stage, record their actual name
 and the reviewed Markdown:
 
 ```powershell
-python workflow\run_stlc.py approve --ticket EPMCDMETST-66524 --stage stage-01 --by "Reviewer name"
-python workflow\run_stlc.py complete --ticket EPMCDMETST-66524 --stage stage-01 --source artifacts\requirement_analysis.md --route generate-new-tests
+python stlc-pipeline\workflow\run_stlc.py approve --ticket EPMCDMETST-66524 --stage stage-01 --by "Reviewer name"
+python stlc-pipeline\workflow\run_stlc.py complete --ticket EPMCDMETST-66524 --stage stage-01 --source stlc-pipeline\artifacts\requirement_analysis.md --route generate-new-tests
 ```
 
 Do not issue `approve` on a human's behalf without their explicit consent. This
@@ -36,7 +36,7 @@ summary. The normal route runs Stage 4a before 4b.
 If prerequisites are missing, record the blocker:
 
 ```powershell
-python workflow\run_stlc.py block --ticket EPMCDMETST-66524 --reason "Missing actual application URL"
+python stlc-pipeline\workflow\run_stlc.py block --ticket EPMCDMETST-66524 --reason "Missing actual application URL"
 ```
 
 Blocking revokes the current stage approval. `unblock --ticket ... --reason
@@ -45,7 +45,7 @@ human approval** before completing that stage.
 
 If a human explicitly waives real-app execution, Stage 4b may instead hand off
 as **review-only** (never as a passed application test). While Stage 4b is
-blocked, run `python workflow\run_stlc.py waive-execution --ticket
+blocked, run `python stlc-pipeline\workflow\run_stlc.py waive-execution --ticket
 EPMCDMETST-66524 --by "Reviewer name" --reason "No real application target"`.
 The waiver is audited, clears the blocker, changes run mode to `review-only`,
 and still requires a fresh Stage 4b approval. The Stage 4b artifact must
@@ -54,23 +54,23 @@ preserve the limitation. This does not authorize scans, PRs, Jira writes, or
 real-app execution.
 
 Each completion snapshots the evidence and audit trail in
-`artifacts\runs\<ticket>\` and updates the configured stage artifact under
-`artifacts\`. Live Jira/GitHub reads or mutations, test execution, and security
+`stlc-pipeline\artifacts\runs\<ticket>\` and updates the configured stage artifact under
+`stlc-pipeline\artifacts\`. Live Jira/GitHub reads or mutations, test execution, and security
 scanning are **not** performed by this runner; they require separately available
 integrations, real evidence, and the appropriate human approval.
 
 Validate the runner and Java workflow definition:
 
 ```powershell
-python -m unittest discover -s workflow -p "test_*.py"
-python .claude\hooks\java_validation_guard.py
-mvn test
+python -m unittest discover -s stlc-pipeline\workflow -p "test_*.py"
+python .github\hooks\java_validation_guard.py
+mvn -f stlc-pipeline\pom.xml test
 ```
 
 ## Book-search UI test package
 
 The two ACs have opt-in Cucumber/Selenium scenarios in
-`src\test\resources\features\book_search.feature`. `mvn test` compiles the
+`stlc-pipeline\src\test\resources\features\book_search.feature`. `mvn -f stlc-pipeline\pom.xml test` compiles the
 step definitions and runs the settings unit tests, **not** the UI suite.
 Provide a real book-store deployment and the following environment variables
 before requesting Stage 4b execution approval:
@@ -90,13 +90,13 @@ The target catalog must contain "Java Programming" and not contain
 After a human approves Stage 4b and the target is available:
 
 ```powershell
-mvn -Dtest=BookStoreE2ESuite test
+mvn -f stlc-pipeline\pom.xml -Dtest=BookStoreE2ESuite test
 ```
 
 The UI suite fails if required configuration or actual assertions are missing;
 do not report passing search scenarios based on compilation or unit tests.
 
-When no real app exists, `python workflow\book_store_fixture.py` serves a
+When no real app exists, `python stlc-pipeline\workflow\book_store_fixture.py` serves a
 test-only page on `127.0.0.1:8765`. Its CSS selectors are `#search`, `#submit`,
 `.details`, and `.empty`; fixture detail text is `Example Author`. Running
 the UI suite against it validates the test wiring only, **not the real

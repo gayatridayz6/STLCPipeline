@@ -209,7 +209,7 @@
     <div class="container">
         <!-- MCP INTEGRATION LAYER HEADER -->
         <div class="mcp-header">
-            <strong>MCP INTEGRATION LAYER:</strong> All agentic interactions now flow through MCP. Jenkins Server calls to jenkins-mcp integration (get_build_info | fetch_test_report | trigger_build | get_build_status)
+            <strong>Copilot integration layer:</strong> Jira/GitHub MCP integrations are optional and must be configured in the active Copilot host. No Jenkins server is configured.
         </div>
         
         <!-- ARTIFACT STACK -->
@@ -218,62 +218,57 @@
             <!-- Orchestration -->
             <div class="stack-box">
                 <h3>Orchestration (1)</h3>
-                <div class="item path">stlc-orchestrator-agent.md</div>
+                <div class="item path">.github/agents/00-stlc-orchestrator-agent.agent.md</div>
                 <div class="item">Main enterprise orchestrator running EPAM STLC pipeline</div>
-                <div class="item">Entry point: Jira issue + build number</div>
+                <div class="item">Entry point: Jira issue or requirement text</div>
                 <div class="item" style="margin-top: 8px; font-weight: bold;">Subagents:</div>
-                <div class="item">→ triage-agent</div>
-                <div class="item">→ qa-strategist-agent</div>
-                <div class="item">→ qa-sentinel-agent</div>
-                <div class="item">→ engineer-agent</div>
+                <div class="item">1. triage-agent</div>
+                <div class="item">2. qa-strategist-agent</div>
+                <div class="item">3. qa-sentinel-agent</div>
+                <div class="item">4a. engineer-agent</div>
+                <div class="item">4b. qa-runner-agent</div>
+                <div class="item">5. security-gate-agent</div>
+                <div class="item">6. github-mcp-agent</div>
+                <div class="item">7. hitl-gate-agent</div>
+                <div class="item">8. reporting-closure-agent</div>
             </div>
             
             <!-- Instructions -->
             <div class="stack-box">
-                <h3>Instructions (1)</h3>
-                <div class="item path">stlc.md</div>
-                <div class="item">Stage procedures, QE Radar rules, troubleshooting</div>
+                <h3>Prompt files (12)</h3>
+                <div class="item path">.github/prompts/stlc.prompt.md</div>
+                <div class="item">Full-workflow entry point for the VS Code Local agent</div>
                 <div class="item" style="margin-top: 8px; font-weight: bold;">Arguments:</div>
-                <div class="item">--ticket=TICKET-1234</div>
-                <div class="item">--resume</div>
-                <div class="item">--from=stage-03</div>
-                <div class="item">--text="requirement"</div>
+                <div class="item">Jira key or requirement text</div>
+                <div class="item">Prompt files are not loaded by Agent Host</div>
             </div>
             
             <!-- Skills -->
             <div class="stack-box">
-                <h3>Skills (8)</h3>
-                <div class="item path">01-requirements-analysis.md</div>
-                <div class="item path">02-test-planning.md</div>
-                <div class="item path">03-test-design.md</div>
-                <div class="item path">04a-engineering.md</div>
-                <div class="item path">04b-execution.md</div>
-                <div class="item path">05-security-gate.md</div>
-                <div class="item path">06-pr-review.md</div>
-                <div class="item path">07-hitl-gate.md</div>
+                <h3>Agent Skills (7)</h3>
+                <div class="item path">bdd-generator</div>
+                <div class="item path">execution-evidence-writer</div>
+                <div class="item path">hitl-audit-writer</div>
+                <div class="item path">jira-parser</div>
+                <div class="item path">pr-review-prep</div>
+                <div class="item path">security-compliance-review</div>
+                <div class="item path">test-planning-strategist</div>
             </div>
             
             <!-- MCP Server -->
             <div class="stack-box">
-                <h3>MCP Server</h3>
-                <div class="item path">github_mcp_config.json</div>
-                <div class="item">gayatridayz6/STLCPipeline</div>
-                <div class="item path" style="margin-top: 8px;">jenkins_mcp_config.json</div>
-                <div class="item">Jenkins build & test integration</div>
-                <div class="item" style="margin-top: 8px; font-weight: bold;">MCP Tools:</div>
-                <div class="item">• get_build_info</div>
-                <div class="item">• fetch_test_report</div>
-                <div class="item">• trigger_build</div>
-                <div class="item">• get_build_status</div>
+                <h3>MCP References</h3>
+                <div class="item path">.github/config/mcp/</div>
+                <div class="item">Templates only; configure services in Copilot</div>
             </div>
             
             <!-- Hooks -->
             <div class="stack-box">
-                <h3>Hooks (2)</h3>
+                <h3>Validation Scripts</h3>
                 <div class="item path">pre-stage-validation.py</div>
-                <div class="item">→ jenkins-post-build-md</div>
+                <div class="item">Explicit invocation; not Copilot lifecycle hooks</div>
                 <div class="item path" style="margin-top: 8px;">approval_gate_guard.py</div>
-                <div class="item">→ jenkins-post-build-md</div>
+                <div class="item">Require explicit human approval</div>
             </div>
         </div>
         
@@ -285,18 +280,18 @@
                 <h3>📥 CONFIG - Input Sources</h3>
                 <div class="config-item input">
                     <strong>project.json</strong>
-                    <div class="path">.claude/config/project.json</div>
+                    <div class="path">.github/config/project.json</div>
                     <div>Pipeline configuration & stage mapping</div>
                 </div>
                 <div class="config-item input">
                     <strong>github_mcp_config.json</strong>
-                    <div class="path">.claude/config/mcp/</div>
-                    <div>GitHub OAuth token, repo details</div>
+                    <div class="path">.github/config/mcp/</div>
+                    <div>Integration references; configure MCP in the active Copilot host</div>
                 </div>
                 <div class="config-item input">
-                    <strong>jenkins_mcp_config.json</strong>
-                    <div class="path">.claude/config/mcp/</div>
-                    <div>Jenkins build endpoint & credentials</div>
+                    <strong>Jenkins MCP</strong>
+                    <div class="path">Not configured</div>
+                    <div>Execution integration must be supplied and approved</div>
                 </div>
                 <div class="config-item input">
                     <strong>Jira Ticket Input</strong>
@@ -321,6 +316,10 @@
                     <div>✓ Stage 3 output - test scenarios</div>
                 </div>
                 <div class="config-item storage">
+                    <strong>engineering_summary.md</strong>
+                    <div>✓ Stage 4a output - implementation evidence</div>
+                </div>
+                <div class="config-item storage">
                     <strong>test_execution_report.md</strong>
                     <div>✓ Stage 4b output - execution evidence</div>
                 </div>
@@ -336,44 +335,32 @@
                     <strong>hitl_audit_trail.md</strong>
                     <div>✓ Stage 7 output - human decisions</div>
                 </div>
+                <div class="config-item storage">
+                    <strong>test_closure_metrics.md</strong>
+                    <div>✓ Stage 8 output - closure report</div>
+                </div>
             </div>
             
             <!-- COMMANDS - Execution & Output -->
             <div class="config-box">
                 <h3>⚡ COMMANDS - Execution Output</h3>
                 <div class="config-item output">
-                    <strong>stlc.md execution</strong>
+                    <strong>stlc.prompt.md</strong>
                     <div>→ Triggers orchestrator flow</div>
                 </div>
                 <div class="config-item output">
-                    <strong>MCP: get_build_info</strong>
-                    <div>← Returns: build metadata, status</div>
+                    <strong>Prompt file</strong>
+                    <div>→ Selects the configured Copilot agent and task</div>
                 </div>
                 <div class="config-item output">
-                    <strong>MCP: fetch_test_report</strong>
-                    <div>← Returns: test results, coverage data</div>
-                </div>
-                <div class="config-item output">
-                    <strong>MCP: trigger_build</strong>
-                    <div>← Returns: build job ID, status</div>
-                </div>
-                <div class="config-item output">
-                    <strong>MCP: get_build_status</strong>
-                    <div>← Returns: pass/fail, logs, artifacts</div>
-                </div>
-                <div class="config-item output">
-                    <strong>Hooks: pre-check</strong>
-                    <div>→ Validates input before stage</div>
-                </div>
-                <div class="config-item output">
-                    <strong>Hooks: post-check</strong>
-                    <div>→ Enforces approval gates</div>
+                    <strong>Validation scripts</strong>
+                    <div>→ Run explicitly; failures block progression</div>
                 </div>
             </div>
         </div>
         
         <!-- 8-STAGE WORKFLOW -->
-        <div class="workflow-title">8-Stage Workflow (branches/loop shown) - MCP Integration Points</div>
+        <div class="workflow-title">8-Stage STLC Workflow (Stage 4 is split into 4a and 4b)</div>
         <div class="workflow-grid">
             <!-- Stage 1 -->
             <div class="stage-box stage-blue">
@@ -389,84 +376,85 @@
             
             <!-- Stage 2 -->
             <div class="stage-box stage-blue">
-                <h4>2. Fetch Build Data</h4>
+                <h4>2. Test Planning</h4>
                 <div class="content">
                     <div><strong>Agent:</strong> qa-strategist</div>
-                    <div><strong>MCP Call:</strong> get_build_info</div>
-                    <div><strong>Fetches:</strong> Build metadata, test report</div>
-                    <div class="mcp-label">MCP TRIGGER</div>
+                    <div><strong>Input:</strong> Approved Stage 1 analysis</div>
+                    <div><strong>Output:</strong> Risk-based test plan</div>
+                    <div class="mcp-label">HUMAN REVIEW</div>
                 </div>
             </div>
             
             <!-- Stage 3 -->
             <div class="stage-box stage-blue">
-                <h4>3. Analyze & Summarize</h4>
+                <h4>3. Test Design & BDD</h4>
                 <div class="content">
                     <div><strong>Agent:</strong> qa-sentinel</div>
-                    <div><strong>Analyzes:</strong> Pass/Failed/Skipped metrics</div>
-                    <div><strong>Output:</strong> Test planning artifact</div>
-                    <div class="mcp-label">POST-CHECK</div>
+                    <div><strong>Input:</strong> Approved Stage 2 plan</div>
+                    <div><strong>Output:</strong> BDD test design</div>
+                    <div class="mcp-label">HUMAN REVIEW</div>
                 </div>
             </div>
             
             <!-- Stage 4A -->
             <div class="stage-box stage-yellow">
-                <h4>4A. Human Review [Human]</h4>
+                <h4>4a. Engineering</h4>
                 <div class="content">
-                    <div><strong>Gate:</strong> HITL approval required</div>
-                    <div><strong>Reviews:</strong> Test plan adequacy</div>
-                    <div><strong>Decision:</strong> Approve/Reject/Modify</div>
-                    <div class="mcp-label">APPROVAL GATE</div>
+                    <div><strong>Agent:</strong> engineer-agent</div>
+                    <div><strong>Input:</strong> Approved Stage 3 design</div>
+                    <div><strong>Output:</strong> Engineering summary</div>
                 </div>
             </div>
             
             <!-- Stage 5 -->
             <div class="stage-box stage-yellow">
-                <h4>5. RCA + QE Radar Tag</h4>
+                <h4>4b. Test Execution</h4>
                 <div class="content">
-                    <div><strong>Analyzes:</strong> Root cause analysis</div>
-                    <div><strong>Tags:</strong> QE Radar categories</div>
-                    <div><strong>Output:</strong> Categorized issues</div>
+                    <div><strong>Agent:</strong> qa-runner-agent</div>
+                    <div><strong>Gate:</strong> Explicit execution approval</div>
+                    <div><strong>Output:</strong> Actual execution evidence</div>
                 </div>
             </div>
             
             <!-- Stage 6 -->
             <div class="stage-box stage-green">
-                <h4>6. Human Approval [Human]</h4>
+                <h4>5. Security & Compliance</h4>
                 <div class="content">
-                    <div><strong>Gate:</strong> Final approval required</div>
-                    <div><strong>Category:</strong> approve/fix/confidence</div>
-                    <div class="mcp-label">APPROVAL GATE</div>
+                    <div><strong>Agent:</strong> security-gate-agent</div>
+                    <div><strong>Evidence:</strong> Actual approved scan results only</div>
+                    <div><strong>Output:</strong> Security report</div>
                 </div>
             </div>
             
             <!-- Stage 7 -->
             <div class="stage-box stage-green">
-                <h4>7. Fix, Push & Re-run</h4>
+                <h4>6. PR Review</h4>
                 <div class="content">
-                    <div><strong>Triggers:</strong> Pre-push HOOK + MCP trigger</div>
-                    <div><strong>MCP:</strong> trigger_build</div>
-                    <div><strong>Monitors:</strong> get_build_status piling</div>
+                    <div><strong>Agent:</strong> github-mcp-agent</div>
+                    <div><strong>Output:</strong> Review and merge-readiness summary</div>
+                    <div><strong>Mutation:</strong> Requires explicit approval</div>
                 </div>
             </div>
             
             <!-- Stage 8 -->
             <div class="stage-box stage-purple">
-                <h4>8. Publish Summary</h4>
+                <h4>7. Human Decision</h4>
                 <div class="content">
-                    <div><strong>Output:</strong> approve → Confidence</div>
-                    <div><strong>Artifact:</strong> test_closure_metrics.md</div>
-                    <div class="mcp-label">FINAL</div>
+                    <div><strong>Agent:</strong> hitl-gate-agent</div>
+                    <div><strong>Decision:</strong> Explicit go/no-go</div>
+                    <div><strong>Output:</strong> Audit trail</div>
+                    <div class="mcp-label">APPROVAL GATE</div>
                 </div>
             </div>
-            
-            <!-- Stage 9 -->
+
+            <!-- Stage 8 -->
             <div class="stage-box stage-purple">
-                <h4>9. Log Defect (if any)</h4>
+                <h4>8. Closure & Reporting</h4>
                 <div class="content">
-                    <div><strong>Creates:</strong> Standard template → Confluence</div>
-                    <div><strong>Links:</strong> Jira ticket → defect log</div>
-                    <div class="mcp-label">CLOSURE</div>
+                    <div><strong>Agent:</strong> reporting-closure-agent</div>
+                    <div><strong>Artifact:</strong> test_closure_metrics.md</div>
+                    <div><strong>Jira:</strong> Sync-ready report only unless approved</div>
+                    <div class="mcp-label">FINAL</div>
                 </div>
             </div>
         </div>
@@ -476,19 +464,19 @@
             <strong>Legend:</strong>
             <div class="legend-item">
                 <span class="legend-color" style="background: #3498db;"></span>
-                Stages 1-3 (Input/Fetch/Summarize) - MCP Enabled
+                Stages 1-3 (Requirements, planning, design)
             </div>
             <div class="legend-item">
                 <span class="legend-color" style="background: #f39c12;"></span>
-                Stages 4-6 (RCA/Classify) - HITL Gate
+                Stages 4-5 (Engineering, execution, security)
             </div>
             <div class="legend-item">
                 <span class="legend-color" style="background: #27ae60;"></span>
-                Stages 6-7 (Fix/Push/Re-run) - MCP Trigger
+                Stages 6-7 (PR review and human decision)
             </div>
             <div class="legend-item">
                 <span class="legend-color" style="background: #8e44ad;"></span>
-                Stages 8-9 (Publish/Defect)
+                Stage 8 (Closure)
             </div>
             <div class="legend-item">
                 <span style="border-bottom: 3px dashed #999;padding-bottom: 5px;">- - - -</span>
@@ -499,11 +487,11 @@
         <!-- NOTES -->
         <div class="note">
             <strong>📊 Data Flow Summary:</strong><br/>
-            <strong>INPUT:</strong> Jira ticket + Build number<br/>
-            <strong>CONFIG:</strong> project.json, MCP configs (GitHub, Jenkins)<br/>
-            <strong>COMMANDS:</strong> stlc.md executes via orchestrator → stages invoke MCP tools (get_build_info, fetch_test_report, trigger_build, get_build_status)<br/>
-            <strong>ARTIFACTS:</strong> Stage outputs stored in /artifacts/ directory (requirement_analysis.md, test_planning.md, test_execution_report.md, security_compliance_report.md, pr_review_summary.md, hitl_audit_trail.md)<br/>
-            <strong>HOOKS:</strong> Pre-check validates inputs before stage | Post-check enforces approval gates + MCP triggers
+            <strong>INPUT:</strong> Jira issue key or pasted requirements<br/>
+            <strong>CONFIG:</strong> Copilot agent files and workflow manifest; MCP references are not active connections<br/>
+            <strong>ENTRY POINT:</strong> Local-agent prompt `.github/prompts/stlc.prompt.md`; invoke the orchestrator agent directly in Agent Host<br/>
+            <strong>ARTIFACTS:</strong> Stage outputs are stored under `stlc-pipeline/artifacts/`<br/>
+            <strong>GATES:</strong> Human approval required where configured; unavailable tools or integrations block dependent stages
         </div>
     </div>
 </body>

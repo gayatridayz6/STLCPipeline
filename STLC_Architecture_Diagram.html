@@ -108,79 +108,70 @@
     <div class="container">
         <div class="header">
             <h1>🏗️ Copilot Prompt-Engineering Artifact Stack</h1>
-            <p>STLC Pipeline: MCP Integration Layer - Enterprise 8-Stage Workflow</p>
+            <p>STLC Pipeline: GitHub Copilot custom agents, Agent Skills, and prompt files</p>
         </div>
         
         <!-- ARTIFACT STACK -->
         <div class="artifact-stack">
             <div class="box orchestration">
                 <h3>Orchestration <span class="count">(1)</span></h3>
-                <div class="item code">stlc-orchestrator-agent.md</div>
+                <div class="item code">.github/agents/00-stlc-orchestrator-agent.agent.md</div>
                 <div class="item" style="margin-top: 10px; font-size: 11px; color: #555;">
                     Main enterprise orchestrator running STLC pipeline end-to-end through stage subagents
                 </div>
                 <div class="item" style="margin-top: 8px; font-weight: 600;">Subagents:</div>
-                <div class="item">• triage-agent</div>
-                <div class="item">• qa-strategist-agent</div>
-                <div class="item">• qa-sentinel-agent</div>
-                <div class="item">• engineer-agent</div>
-                <div class="item">• qa-runner-agent</div>
-                <div class="item">• security-gate-agent</div>
-                <div class="item">• github-mcp-agent</div>
-                <div class="item">• hitl-gate-agent</div>
+                <div class="item">1. triage-agent</div>
+                <div class="item">2. qa-strategist-agent</div>
+                <div class="item">3. qa-sentinel-agent</div>
+                <div class="item">4a. engineer-agent</div>
+                <div class="item">4b. qa-runner-agent</div>
+                <div class="item">5. security-gate-agent</div>
+                <div class="item">6. github-mcp-agent</div>
+                <div class="item">7. hitl-gate-agent</div>
+                <div class="item">8. reporting-closure-agent</div>
             </div>
             
             <div class="box instructions">
-                <h3>Instructions <span class="count">(1)</span></h3>
-                <div class="item code">stlc.md</div>
+                <h3>Prompt files <span class="count">(12)</span></h3>
+                <div class="item code">.github/prompts/stlc.prompt.md</div>
                 <div class="item" style="margin-top: 10px; font-size: 11px; color: #555;">
-                    Full pipeline execution command with arguments and execution model
+                    Full-workflow entry point for VS Code Local; use the orchestrator directly in Agent Host
                 </div>
                 <div class="item" style="margin-top: 12px; font-weight: 600; font-size: 11px;">Examples:</div>
                 <div class="item code" style="margin-top: 6px;">--ticket=TICKET-1234</div>
                 <div class="item code">--resume</div>
-                <div class="item code">--from=stage-03</div>
-                <div class="item code" style="margin-top: 6px;">--text="requirement"</div>
+                <div class="item code">Jira key or requirement text</div>
             </div>
             
             <div class="box skills">
-                <h3>Skills <span class="count">(8)</span></h3>
-                <div class="item code">01-requirements-analysis.md</div>
-                <div class="item code">02-test-planning.md</div>
-                <div class="item code">03-test-design.md</div>
-                <div class="item code">04a-engineering.md</div>
-                <div class="item code">04b-execution.md</div>
-                <div class="item code">05-security-gate.md</div>
-                <div class="item code">06-pr-review.md</div>
-                <div class="item code">07-hitl-gate.md</div>
+                <h3>Agent Skills <span class="count">(7)</span></h3>
+                <div class="item code">bdd-generator</div>
+                <div class="item code">execution-evidence-writer</div>
+                <div class="item code">hitl-audit-writer</div>
+                <div class="item code">jira-parser</div>
+                <div class="item code">pr-review-prep</div>
+                <div class="item code">security-compliance-review</div>
+                <div class="item code">test-planning-strategist</div>
             </div>
             
             <div class="box mcp">
-                <h3>MCP Server <span class="count">(2)</span></h3>
-                <div class="item code">github_mcp_config.json</div>
+                <h3>MCP References <span class="count">(2)</span></h3>
+                <div class="item code">.github/config/mcp/github_mcp_config.json</div>
+                <div class="item code" style="margin-top: 8px;">.github/config/mcp/jira_mcp_config.json</div>
                 <div class="item" style="margin-top: 8px; font-size: 11px; color: #555;">
-                    Repository: gayatridayz6/STLCPipeline
+                    Templates only; configure MCP in the active Copilot host
                 </div>
-                <div class="item code" style="margin-top: 8px;">jira_mcp_config.json</div>
-                <div class="item" style="margin-top: 8px; font-size: 11px; color: #555;">
-                    Jira integration for requirement tracking
-                </div>
-                <div class="item" style="margin-top: 12px; font-weight: 600; font-size: 11px;">Tools:</div>
-                <div class="item">• get_build_info</div>
-                <div class="item">• fetch_test_report</div>
-                <div class="item">• trigger_build</div>
-                <div class="item">• get_build_status</div>
             </div>
             
             <div class="box hooks">
-                <h3>Hooks <span class="count">(2)</span></h3>
+                <h3>Validation Scripts</h3>
                 <div class="item code">pre-stage-validation.py</div>
                 <div class="item" style="margin-top: 8px; font-size: 11px; color: #555;">
-                    Pre-execution validation guards
+                    Explicitly invoked; not Copilot lifecycle hooks
                 </div>
                 <div class="item code" style="margin-top: 8px;">approval_gate_guard.py</div>
                 <div class="item" style="margin-top: 8px; font-size: 11px; color: #555;">
-                    Post-stage approval enforcement
+                    Approval validation; human confirmation is still required
                 </div>
                 <div class="item" style="margin-top: 12px; font-weight: 600; font-size: 11px;">Other Guards:</div>
                 <div class="item">• artifact_contract_guard.py</div>
@@ -190,7 +181,7 @@
         
         <!-- WORKFLOW FLOW -->
         <div class="workflow-section">
-            <h2>📊 8-Stage Workflow with MCP Integration Points</h2>
+            <h2>📊 8-Stage Workflow with Conditional Integrations</h2>
             <div class="connection-flow">
                 <div class="flow-item" style="border-left-color: #3498db;">
                     <div class="stage-num">Stage 1</div>
@@ -203,36 +194,45 @@
                 
                 <div class="flow-item" style="border-left-color: #9b59b6;">
                     <div class="stage-num">Stage 2</div>
-                    <div class="stage-name">Fetch Build Data</div>
-                    <div class="stage-agent">qa-strategist</div>
-                    <div class="mcp-trigger">📡 MCP GitHub call</div>
+                    <div class="stage-name">Test Planning</div>
+                    <div class="stage-agent">qa-strategist-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Risk-based plan</div>
                 </div>
                 
                 <div class="arrow">→</div>
                 
                 <div class="flow-item" style="border-left-color: #e74c3c;">
                     <div class="stage-num">Stage 3</div>
-                    <div class="stage-name">Analyze & Plan</div>
-                    <div class="stage-agent">qa-sentinel</div>
-                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Test Strategy</div>
+                    <div class="stage-name">Test Design & BDD</div>
+                    <div class="stage-agent">qa-sentinel-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Approved plan required</div>
                 </div>
                 
                 <div class="arrow">→</div>
                 
                 <div class="flow-item" style="border-left-color: #27ae60;">
-                    <div class="stage-num">Stage 4</div>
-                    <div class="stage-name">Develop & Execute</div>
-                    <div class="stage-agent">engineer/qa-runner</div>
-                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Build & Test</div>
+                    <div class="stage-num">Stage 4a</div>
+                    <div class="stage-name">Engineering</div>
+                    <div class="stage-agent">engineer-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Build & Implement</div>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-item" style="border-left-color: #2ecc71;">
+                    <div class="stage-num">Stage 4b</div>
+                    <div class="stage-name">Test Execution</div>
+                    <div class="stage-agent">qa-runner-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Run & Report Tests</div>
                 </div>
                 
                 <div class="arrow">→</div>
                 
                 <div class="flow-item" style="border-left-color: #f39c12;">
                     <div class="stage-num">Stage 5</div>
-                    <div class="stage-name">Security Gate</div>
-                    <div class="stage-agent">security-gate</div>
-                    <div class="mcp-trigger">🔐 Security Scan</div>
+                    <div class="stage-name">Security & Compliance</div>
+                    <div class="stage-agent">security-gate-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Approved evidence only</div>
                 </div>
                 
                 <div class="arrow">→</div>
@@ -241,7 +241,7 @@
                     <div class="stage-num">Stage 6</div>
                     <div class="stage-name">PR Review</div>
                     <div class="stage-agent">github-mcp-agent</div>
-                    <div class="mcp-trigger">📡 GitHub PR</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">GitHub MCP if available</div>
                 </div>
                 
                 <div class="arrow">→</div>
@@ -249,7 +249,7 @@
                 <div class="flow-item" style="border-left-color: #c0392b;">
                     <div class="stage-num">Stage 7</div>
                     <div class="stage-name">HITL Gate</div>
-                    <div class="stage-agent">hitl-gate</div>
+                    <div class="stage-agent">hitl-gate-agent</div>
                     <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">👤 Human Approval</div>
                 </div>
                 
@@ -258,7 +258,7 @@
                 <div class="flow-item" style="border-left-color: #8e44ad;">
                     <div class="stage-num">Stage 8</div>
                     <div class="stage-name">Closure & Report</div>
-                    <div class="stage-agent">reporting-closure</div>
+                    <div class="stage-agent">reporting-closure-agent</div>
                     <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Summary Report</div>
                 </div>
             </div>
@@ -266,25 +266,25 @@
         
         <!-- HOOKS DETAILS -->
         <div class="workflow-section">
-            <h2>🪝 Hook Lifecycle (Pre-Check & Post-Check)</h2>
+            <h2>Validation Scripts (Explicitly Invoked)</h2>
             <div class="hooks-details">
                 <div class="hooks-grid">
                     <div class="hook-item">
-                        <strong>🔴 Pre-Stage-Validation Hook</strong>
+                        <strong>Pre-Stage Validation</strong>
                         <div style="margin-top: 10px; font-size: 11px; line-height: 1.6;">
                             <strong>Runs BEFORE each stage:</strong>
                             <ul style="margin-left: 15px; margin-top: 5px;">
                                 <li>Validates artifact contracts</li>
                                 <li>Checks Java validation requirements</li>
                                 <li>Validates input prerequisites</li>
-                                <li>Verifies MCP readiness</li>
+                                <li>Checks configured prerequisites</li>
                             </ul>
                         </div>
-                        <div class="location">📁 .claude/hooks/pre_stage_validation.py</div>
+                        <div class="location">📁 .github/hooks/pre_stage_validation.py</div>
                     </div>
                     
                     <div class="hook-item">
-                        <strong>🟢 Approval-Gate-Guard Hook</strong>
+                        <strong>Approval-Gate Guard</strong>
                         <div style="margin-top: 10px; font-size: 11px; line-height: 1.6;">
                             <strong>Runs AFTER each stage:</strong>
                             <ul style="margin-left: 15px; margin-top: 5px;">
@@ -294,7 +294,7 @@
                                 <li>Allows/blocks progression</li>
                             </ul>
                         </div>
-                        <div class="location">📁 .claude/hooks/approval_gate_guard.py</div>
+                        <div class="location">📁 .github/hooks/approval_gate_guard.py</div>
                     </div>
                 </div>
             </div>
@@ -302,49 +302,47 @@
         
         <!-- AGENT-SKILL-CMD-HOOK MAPPING -->
         <div class="workflow-section">
-            <h2>🔗 Agent → Skill → Command → Hook Mapping</h2>
+            <h2>🔗 Copilot Agent → Skill → Prompt Mapping</h2>
             <div class="stages-grid" style="grid-template-columns: 1fr;">
                 <div class="stage-card">
                     <h4>Stage 1: Triage Agent Flow</h4>
                     <span class="badge agent">Agent: triage-agent</span>
-                    <span class="badge skill">Skill: 01-requirements-analysis</span>
-                    <span class="badge cmd">Cmd: stlc.md --ticket=XXX</span>
+                    <span class="badge skill">Skill: jira-parser</span>
+                    <span class="badge cmd">Prompt: 01-requirements-analysis.prompt.md</span>
                     <div style="margin-top: 10px; font-size: 11px;">
-                        <strong>Pre-Hook:</strong> pre_stage_validation (check Jira input format)<br/>
-                        <strong>Post-Hook:</strong> approval_gate_guard (validate requirements extracted)
+                        <strong>Validation:</strong> input guard and artifact contract script<br/>
+                        <strong>Routing:</strong> existing tests or generate new tests
                     </div>
                     <div style="margin-top: 10px; font-size: 11px; background: #f5f5f5; padding: 8px; border-radius: 3px;">
-                        📁 Location: .claude/.agents/1.triage-agent.md → commands/01-requirements-analysis.md → hooks/pre_stage_validation.py
+                        📁 Location: .github/agents/01-triage-agent.agent.md → prompts/01-requirements-analysis.prompt.md
                     </div>
                 </div>
                 
                 <div class="stage-card">
                     <h4>Stage 2: QA Strategist Agent Flow</h4>
                     <span class="badge agent">Agent: qa-strategist-agent</span>
-                    <span class="badge skill">Skill: 02-test-planning</span>
-                    <span class="badge cmd">Cmd: stlc.md --from=stage-02</span>
+                    <span class="badge skill">Skill: test-planning-strategist</span>
+                    <span class="badge cmd">Prompt: 02-test-planning.prompt.md</span>
                     <div style="margin-top: 10px; font-size: 11px;">
-                        <strong>MCP Trigger:</strong> github_mcp_config.json (fetch build metadata)<br/>
-                        <strong>Pre-Hook:</strong> Validate build data fetched<br/>
-                        <strong>Post-Hook:</strong> Approve test plan
+                        <strong>Input:</strong> Approved Stage 1 analysis<br/>
+                        <strong>Gate:</strong> Human approval before progression
                     </div>
                     <div style="margin-top: 10px; font-size: 11px; background: #f5f5f5; padding: 8px; border-radius: 3px;">
-                        📁 Location: .claude/config/mcp/github_mcp_config.json → commands/02-test-planning.md → hooks/approval_gate_guard.py
+                        📁 Location: .github/agents/02-qa-strategist-agent.agent.md → prompts/02-test-planning.prompt.md
                     </div>
                 </div>
                 
                 <div class="stage-card">
                     <h4>Stage 6: GitHub MCP Agent Flow</h4>
                     <span class="badge agent">Agent: github-mcp-agent</span>
-                    <span class="badge skill">Skill: 06-pr-review</span>
-                    <span class="badge cmd">Cmd: get_build_info, trigger_build, get_build_status</span>
+                    <span class="badge skill">Skill: pr-review-prep</span>
+                    <span class="badge cmd">Prompt: 06-pr-review.prompt.md</span>
                     <div style="margin-top: 10px; font-size: 11px;">
-                        <strong>MCP Server:</strong> GitHub (gayatridayz6/STLCPipeline)<br/>
-                        <strong>Tools Used:</strong> get_build_info, fetch_test_report, trigger_build<br/>
-                        <strong>Auth:</strong> GITHUB_TOKEN (OAuth)
+                        <strong>Integration:</strong> GitHub MCP must be configured in Copilot<br/>
+                        <strong>Actions:</strong> Review preparation; PR mutation requires approval
                     </div>
                     <div style="margin-top: 10px; font-size: 11px; background: #f5f5f5; padding: 8px; border-radius: 3px;">
-                        📁 Location: .claude/config/mcp/github_mcp_config.json → commands/06-pr-review.md → hooks/approval_gate_guard.py
+                        📁 Location: .github/agents/06-github-mcp-agent.agent.md → prompts/06-pr-review.prompt.md
                     </div>
                 </div>
             </div>

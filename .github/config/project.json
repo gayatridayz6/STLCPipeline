@@ -1,0 +1,354 @@
+{
+  "projectName": "my-enterprise-stlc-project",
+  "architecture": "epam-stlc-multi-agent",
+  "orchestrationMode": "single-orchestrator-with-subagents",
+  "liveIntegrationsEnabled": false,
+  "approvalMode": "human-in-the-loop",
+  "artifactsRoot": "stlc-pipeline/artifacts",
+  "workflowRoot": "stlc-pipeline/workflow",
+  "workflowDefinition": "stlc-pipeline/workflow/STLCWorkflowOrchestrator.java",
+  "commandRoot": ".github/prompts",
+  "orchestratorAgent": ".github/agents/00-stlc-orchestrator-agent.agent.md",
+  "mcpBindings": {
+    "jira": ".github/config/mcp/jira_mcp_config.json",
+    "github": ".github/config/mcp/github_mcp_config.json"
+  },
+  "agentRoot": ".github/agents",
+  "hookRoot": ".github/hooks",
+  "skillRoot": ".github/skills",
+  "promptPackagePolicy": {
+    "usePromptFilesAsEntryPointsWhenSupported": true,
+    "useAgentSkillsForReusableCapabilities": true
+  },
+  "approvalGates": [
+    "design-approval",
+    "execution-approval"
+  ],
+  "securityPosture": {
+    "defaultExternalMutation": "blocked",
+    "requiresHumanApprovalFor": [
+      "jira-read-live",
+      "repository-write",
+      "test-execution",
+      "security-scan",
+      "pull-request-creation",
+      "jira-sync"
+    ],
+    "secretHandling": "references-only",
+    "evidenceArtifactsRequired": true
+  },
+  "liveDemo": {
+    "scenario": "Jira story to closure with placeholder integrations",
+    "entrypointAgent": "stlc-orchestrator-agent",
+    "entrypointCommand": ".github/prompts/stlc.prompt.md",
+    "entryArtifact": "stlc-pipeline/artifacts/requirement_analysis.md",
+    "finalArtifact": "stlc-pipeline/artifacts/test_closure_metrics.md"
+  },
+  "storyReusePolicy": {
+    "detectExistingGeneratedTestsBy": [
+      "jiraIssueKey",
+      "storyTraceabilityMarkers",
+      "existingArtifactMappings"
+    ],
+    "whenExistingTestsFound": {
+      "route": "stage-04b-execution-only",
+      "skipStages": [
+        "stage-02",
+        "stage-03",
+        "stage-04a"
+      ],
+      "skipSubAgents": [
+        "qa-strategist-agent",
+        "qa-sentinel-agent",
+        "engineer-agent"
+      ],
+      "artifact": "stlc-pipeline/artifacts/test_execution_report.md"
+    },
+    "whenNoExistingTestsFound": {
+      "route": "stage-02",
+      "continueNormalFlow": true
+    }
+  },
+  "commands": {
+    "phase-00": ".github/prompts/mcp-preflight.prompt.md",
+    "pipeline": ".github/prompts/stlc.prompt.md",
+    "stage-01": ".github/prompts/01-requirements-analysis.prompt.md",
+    "stage-02": ".github/prompts/02-test-planning.prompt.md",
+    "stage-03": ".github/prompts/03-test-design.prompt.md",
+    "stage-04a": ".github/prompts/04a-engineering.prompt.md",
+    "stage-04b": ".github/prompts/04b-execution.prompt.md",
+    "stage-05": ".github/prompts/05-security-gate.prompt.md",
+    "stage-06": ".github/prompts/06-pr-review.prompt.md",
+    "stage-07": ".github/prompts/07-hitl-gate.prompt.md",
+    "stage-08": ".github/prompts/08-closure-sync.prompt.md"
+  },
+  "subAgents": {
+    "stage-01": ".github/agents/01-triage-agent.agent.md",
+    "stage-02": ".github/agents/02-qa-strategist-agent.agent.md",
+    "stage-03": ".github/agents/03-qa-sentinel-agent.agent.md",
+    "stage-04a": ".github/agents/04a-engineer-agent.agent.md",
+    "stage-04b": ".github/agents/04b-qa-runner-agent.agent.md",
+    "stage-05": ".github/agents/05-security-gate-agent.agent.md",
+    "stage-06": ".github/agents/06-github-mcp-agent.agent.md",
+    "stage-07": ".github/agents/07-hitl-gate-agent.agent.md",
+    "stage-08": ".github/agents/08-reporting-closure-agent.agent.md"
+  },
+  "executionContracts": {
+    "stlc-orchestrator-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/artifact_contract_guard.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/mcp-preflight.prompt.md",
+        ".github/prompts/stlc.prompt.md"
+      ],
+      "subagents": [
+        "triage-agent",
+        "qa-strategist-agent",
+        "qa-sentinel-agent",
+        "engineer-agent",
+        "qa-runner-agent",
+        "security-gate-agent",
+        "github-mcp-agent",
+        "hitl-gate-agent",
+        "reporting-closure-agent"
+      ]
+    },
+    "triage-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/01-requirements-analysis.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/jira-parser/SKILL.md"
+      ]
+    },
+    "qa-strategist-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/02-test-planning.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/test-planning-strategist/SKILL.md"
+      ]
+    },
+    "qa-sentinel-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/03-test-design.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/bdd-generator/SKILL.md"
+      ]
+    },
+    "engineer-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/04a-engineering.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/execution-evidence-writer/SKILL.md"
+      ]
+    },
+    "qa-runner-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/04b-execution.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/execution-evidence-writer/SKILL.md"
+      ]
+    },
+    "security-gate-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/05-security-gate.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/security-compliance-review/SKILL.md"
+      ]
+    },
+    "github-mcp-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/06-pr-review.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/pr-review-prep/SKILL.md"
+      ]
+    },
+    "hitl-gate-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/approval_gate_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/07-hitl-gate.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/hitl-audit-writer/SKILL.md"
+      ]
+    },
+    "reporting-closure-agent": {
+      "preHooks": [
+        ".github/hooks/pre_stage_validation.py",
+        ".github/hooks/artifact_contract_guard.py"
+      ],
+      "commands": [
+        ".github/prompts/08-closure-sync.prompt.md"
+      ],
+      "skills": [
+        ".github/skills/execution-evidence-writer/SKILL.md",
+        ".github/skills/hitl-audit-writer/SKILL.md"
+      ]
+    }
+  },
+  "artifacts": {
+    "stage-01": "stlc-pipeline/artifacts/requirement_analysis.md",
+    "stage-02": "stlc-pipeline/artifacts/test_planning.md",
+    "stage-03": "stlc-pipeline/artifacts/test_design.md",
+    "stage-04a": "stlc-pipeline/artifacts/engineering_summary.md",
+    "stage-04b": "stlc-pipeline/artifacts/test_execution_report.md",
+    "stage-04b-execution-only": "stlc-pipeline/artifacts/test_execution_report.md",
+    "stage-05": "stlc-pipeline/artifacts/security_compliance_report.md",
+    "stage-06": "stlc-pipeline/artifacts/pr_review_summary.md",
+    "stage-07": "stlc-pipeline/artifacts/hitl_audit_trail.md",
+    "stage-08": "stlc-pipeline/artifacts/test_closure_metrics.md"
+  },
+  "stages": [
+    {
+      "id": "stage-01",
+      "name": "Requirements Analysis & Triage",
+      "subagentPath": ".github/agents/01-triage-agent.agent.md",
+      "commandPath": ".github/prompts/01-requirements-analysis.prompt.md",
+      "agent": "triage-agent",
+      "artifact": "stlc-pipeline/artifacts/requirement_analysis.md",
+      "routingDecisions": {
+        "reuse-existing-tests": "stage-04b-execution-only",
+        "generate-new-tests": "stage-02"
+      },
+      "mcpDependencies": [
+        "jira"
+      ],
+      "handoff": "stage-02",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-02",
+      "name": "Test Planning & Strategy",
+      "subagentPath": ".github/agents/02-qa-strategist-agent.agent.md",
+      "commandPath": ".github/prompts/02-test-planning.prompt.md",
+      "agent": "qa-strategist-agent",
+      "artifact": "stlc-pipeline/artifacts/test_planning.md",
+      "handoff": "stage-03",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-03",
+      "name": "Test Case Design & Generation",
+      "subagentPath": ".github/agents/03-qa-sentinel-agent.agent.md",
+      "commandPath": ".github/prompts/03-test-design.prompt.md",
+      "agent": "qa-sentinel-agent",
+      "artifact": "stlc-pipeline/artifacts/test_design.md",
+      "handoff": "stage-04a",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-04a",
+      "name": "Test Automation Engineering",
+      "subagentPath": ".github/agents/04a-engineer-agent.agent.md",
+      "commandPath": ".github/prompts/04a-engineering.prompt.md",
+      "agent": "engineer-agent",
+      "artifact": "stlc-pipeline/artifacts/engineering_summary.md",
+      "handoff": "stage-04b",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-04b",
+      "name": "Test Execution & Evidence Collection",
+      "subagentPath": ".github/agents/04b-qa-runner-agent.agent.md",
+      "commandPath": ".github/prompts/04b-execution.prompt.md",
+      "agent": "qa-runner-agent",
+      "artifact": "stlc-pipeline/artifacts/test_execution_report.md",
+      "handoff": "stage-05",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-04b-execution-only",
+      "name": "Execution Summary for Existing Story Automation",
+      "subagentPath": ".github/agents/04b-qa-runner-agent.agent.md",
+      "commandPath": ".github/prompts/04b-execution.prompt.md",
+      "agent": "qa-runner-agent",
+      "artifact": "stlc-pipeline/artifacts/test_execution_report.md",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-05",
+      "name": "Security & Compliance Gate",
+      "subagentPath": ".github/agents/05-security-gate-agent.agent.md",
+      "commandPath": ".github/prompts/05-security-gate.prompt.md",
+      "agent": "security-gate-agent",
+      "artifact": "stlc-pipeline/artifacts/security_compliance_report.md",
+      "handoff": "stage-06",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-06",
+      "name": "GitHub PR Creation & Automated Code Review",
+      "subagentPath": ".github/agents/06-github-mcp-agent.agent.md",
+      "commandPath": ".github/prompts/06-pr-review.prompt.md",
+      "agent": "github-mcp-agent",
+      "artifact": "stlc-pipeline/artifacts/pr_review_summary.md",
+      "mcpDependencies": [
+        "github"
+      ],
+      "handoff": "stage-07",
+      "requiresHumanApprovalBeforeStart": true
+    },
+    {
+      "id": "stage-07",
+      "name": "Human-in-the-Loop Approval Gate",
+      "subagentPath": ".github/agents/07-hitl-gate-agent.agent.md",
+      "commandPath": ".github/prompts/07-hitl-gate.prompt.md",
+      "agent": "hitl-gate-agent",
+      "artifact": "stlc-pipeline/artifacts/hitl_audit_trail.md",
+      "handoff": "stage-08",
+      "requiresHumanApprovalBeforeStart": false
+    },
+    {
+      "id": "stage-08",
+      "name": "Test Closure & Jira Sync",
+      "subagentPath": ".github/agents/08-reporting-closure-agent.agent.md",
+      "commandPath": ".github/prompts/08-closure-sync.prompt.md",
+      "agent": "reporting-closure-agent",
+      "artifact": "stlc-pipeline/artifacts/test_closure_metrics.md",
+      "mcpDependencies": [
+        "jira"
+      ],
+      "requiresHumanApprovalBeforeStart": true
+    }
+  ]
+}

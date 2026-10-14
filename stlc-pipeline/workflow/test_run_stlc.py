@@ -7,7 +7,7 @@ import unittest
 from run_stlc import WorkflowError, approve, change_blocker, complete, load_state, preflight, run_dir, start, waive_execution
 
 
-PROJECT = Path(__file__).resolve().parents[1]
+PROJECT = Path(__file__).resolve().parents[2]
 
 
 class WorkflowTests(unittest.TestCase):
@@ -15,20 +15,19 @@ class WorkflowTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        config_dir = self.root / ".claude" / "config"
+        config_dir = self.root / ".github" / "config"
         config_dir.mkdir(parents=True)
-        config = json.loads((PROJECT / ".claude/config/project.json").read_text(encoding="utf-8"))
+        config = json.loads((PROJECT / ".github/config/project.json").read_text(encoding="utf-8"))
+        self.config = config
         (config_dir / "project.json").write_text(json.dumps(config), encoding="utf-8")
-        hooks = self.root / ".claude" / "hooks"
+        hooks = self.root / ".github" / "hooks"
         hooks.mkdir()
         for name in ("pre_stage_validation", "artifact_contract_guard", "approval_gate_guard",
                      "java_validation_guard"):
-            shutil.copyfile(PROJECT / ".claude/hooks" / (name + ".py"), hooks / (name + ".py"))
-        workflow = self.root / "workflow"
-        workflow.mkdir()
-        (workflow / "STLCWorkflowOrchestrator.java").write_text(
-            "class STLCWorkflowOrchestrator {}", encoding="utf-8"
-        )
+            shutil.copyfile(PROJECT / ".github/hooks" / (name + ".py"), hooks / (name + ".py"))
+        workflow = self.root / config["workflowDefinition"]
+        workflow.parent.mkdir(parents=True)
+        workflow.write_text("class STLCWorkflowOrchestrator {}", encoding="utf-8")
         for artifact in config["artifacts"].values():
             path = self.root / artifact
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -48,7 +47,7 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(WorkflowError, "nonempty"):
             start(self.root, self.ticket, self.input_file)
         self.input_file.write_text("Requirement", encoding="utf-8")
-        (self.root / "artifacts/test_design.md").unlink()
+        (self.root / self.config["artifacts"]["stage-03"]).unlink()
         with self.assertRaisesRegex(WorkflowError, "artifact_contract_guard"):
             start(self.root, self.ticket, self.input_file)
 
@@ -64,7 +63,8 @@ class WorkflowTests(unittest.TestCase):
         state = load_state(run_dir(self.root, self.ticket))
         self.assertEqual(state["current"], "stage-02")
         self.assertEqual(state["route"], "generate-new-tests")
-        self.assertEqual((self.root / "artifacts/requirement_analysis.md").read_text(), artifact.read_text())
+        mapped_artifact = self.root / self.config["artifacts"]["stage-01"]
+        self.assertEqual(mapped_artifact.read_text(), artifact.read_text())
         self.assertEqual(len((run_dir(self.root, self.ticket) / "audit.jsonl").read_text().splitlines()), 3)
         with self.assertRaisesRegex(WorkflowError, "already exists"):
             start(self.root, self.ticket, self.input_file)

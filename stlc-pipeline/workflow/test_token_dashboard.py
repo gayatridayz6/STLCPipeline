@@ -135,7 +135,7 @@ class TokenDashboardTests(unittest.TestCase):
         hook(self.root, nested)
         self.assertEqual(load(self.target)["measuredTotalTokens"], 40)
 
-    def test_configured_hook_and_cli_persist_html_with_paths_containing_spaces(self):
+    def test_cli_persists_html_with_paths_containing_spaces(self):
         project = Path(__file__).resolve().parents[1]
         copied_root = self.root / "project with spaces"
         workflow = copied_root / "workflow"
@@ -148,23 +148,7 @@ class TokenDashboardTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.write_messages([self.message()])
-        settings = json.loads((project / ".claude" / "settings.json").read_text(encoding="utf-8"))
-        for event_name in ("PostToolUse", "PostToolUseFailure"):
-            handler = settings["hooks"][event_name][0]["hooks"][0]
-            arguments = [
-                argument.replace("${CLAUDE_PROJECT_DIR}", str(copied_root))
-                for argument in handler["args"]
-            ]
-            event = self.event()
-            event["hook_event_name"] = event_name
-            if event_name == "PostToolUseFailure":
-                event.pop("tool_response")
-                event["tool_use_id"] = "failure"
-            result = subprocess.run(
-                [handler["command"], *arguments], input=json.dumps(event),
-                capture_output=True, text=True,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
+        hook(copied_root, self.event())
         result = subprocess.run(
             [sys.executable, str(script), "finalize", "--run", self.run,
              "--status", "blocked", "--reason", "Awaiting approval"],
@@ -176,7 +160,7 @@ class TokenDashboardTests(unittest.TestCase):
         data = load(target)
         self.assertEqual(data["measuredTotalTokens"], 40)
         self.assertEqual(data["status"], "blocked")
-        self.assertEqual(data["recordedCalls"], 2)
+        self.assertEqual(data["recordedCalls"], 1)
         self.assertIn("Awaiting approval", (target / "stlc_dashboard.html").read_text())
         result = subprocess.run(
             [sys.executable, str(script), "hook"], input="{broken",

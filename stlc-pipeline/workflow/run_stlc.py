@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 STAGES = (
     "stage-01", "stage-02", "stage-03", "stage-04a", "stage-04b",
     "stage-05", "stage-06", "stage-07", "stage-08",
@@ -33,7 +33,13 @@ def now():
 def run_dir(root, ticket):
     if not ISSUE_KEY.fullmatch(ticket):
         raise WorkflowError("Ticket must be a Jira-style issue key, e.g. EPMCDMETST-66524")
-    return root / "artifacts" / "runs" / ticket
+    config = load_config(root)
+    return root / config["artifactsRoot"] / "runs" / ticket
+
+
+def load_config(root):
+    config_path = root / ".github" / "config" / "project.json"
+    return json.loads(config_path.read_text(encoding="utf-8"))
 
 
 def load_state(directory):
@@ -61,11 +67,10 @@ def audit(directory, event, stage, actor=None, reason=None):
 
 
 def preflight(root, input_file):
-    config_path = root / ".claude" / "config" / "project.json"
-    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config = load_config(root)
     for hook in ("pre_stage_validation", "artifact_contract_guard", "approval_gate_guard",
                  "java_validation_guard"):
-        script = root / ".claude" / "hooks" / (hook + ".py")
+        script = root / ".github" / "hooks" / (hook + ".py")
         result = subprocess.run(
             [sys.executable, str(script)], cwd=root, capture_output=True, text=True
         )
@@ -117,8 +122,6 @@ def approve(root, ticket, stage, actor):
 
 
 def artifact_key(stage):
-    if stage in ("stage-04a", "stage-04b"):
-        return "stage-04"
     return stage
 
 
@@ -139,7 +142,7 @@ def complete(root, ticket, stage, source, route):
         raise WorkflowError(f"Cannot complete blocked stage {stage}: {state['blocker']}")
     if stage not in state["approvals"]:
         raise WorkflowError(f"Human approval required before {stage}")
-    config = json.loads((root / ".claude" / "config" / "project.json").read_text(encoding="utf-8"))
+    config = load_config(root)
     if stage == "stage-01":
         routes = config["stages"][0]["routingDecisions"]
         if route not in routes:
