@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STLC Pipeline Architecture - Complete Flow Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #f5f7fa;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+            background: #f5f7fa;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .stage {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stage:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stage.loading {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+        
+        .stage.mcp {
+            border-left-color: #9b59b6;
+            background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
+        }
+        
+        .stage.agents {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+        }
+        
+        .stage.skills {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, #fffbf0 0%, #ffffff 100%);
+        }
+        
+        .stage.hooks {
+            border-left-color: #16a085;
+            background: linear-gradient(135deg, #f0fffe 0%, #ffffff 100%);
+        }
+        
+        .stage.hitl {
+            border-left-color: #c0392b;
+            background: linear-gradient(135deg, #fdf4f3 0%, #ffffff 100%);
+        }
+        
+        .stage.healing {
+            border-left-color: #2980b9;
+            background: linear-gradient(135deg, #f4f9ff 0%, #ffffff 100%);
+        }
+        
+        .stage h2 {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stage-icon {
+            font-size: 28px;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .detail-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .detail-card h4 {
+            color: #2c3e50;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-card p {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+        
+        .detail-card ul {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .detail-card li {
+            color: #666;
+            font-size: 13px;
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .detail-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .agent-box {
+            background: #e8f8f5;
+            border: 2px solid #27ae60;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .skill-box {
+            background: #fff9e6;
+            border: 2px solid #f39c12;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #f39c12;
+            font-weight: 600;
+        }
+        
+        .hook-box {
+            background: #e8f8f7;
+            border: 2px solid #16a085;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #16a085;
+            font-weight: 600;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 30px;
+            color: #3498db;
+            margin: -15px 0;
+            opacity: 0.6;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 2px solid #ddd;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.6;
+        }
+        
+        .count-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .connection-line {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #95a5a6;
+            font-size: 24px;
+        }
+        
+        .footer {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ STLC Pipeline Architecture Flow</h1>
+            <p>Complete End-to-End Flow with MCP, Agents, Skills, Hooks & Human-in-Loop</p>
+        </div>
+        
+        <div class="content">
+            <div class="flow-container">
+                
+                <!-- STAGE 1: LOADING -->
+                <div class="stage loading">
+                    <h2>
+                        <span class="stage-icon">⚡</span>
+                        Stage 1: System Loading & Initialization
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Loading Process</h4>
+                            <ul>
+                                <li>Initialize STLC Pipeline Core</li>
+                                <li>Load Configuration Files</li>
+                                <li>Register Agent Definitions</li>
+                                <li>Initialize Skills Library</li>
+                                <li>Setup Hook Registry</li>
+                                <li>Establish Database Connections</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Configuration Source</h4>
+                            <ul>
+                                <li>pipeline-config.yaml</li>
+                                <li>agents-config.json</li>
+                                <li>skills-manifest.json</li>
+                                <li>hooks-registry.json</li>
+                                <li>Environment Variables</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Status Checks</h4>
+                            <ul>
+                                <li>✓ Config Validation</li>
+                                <li>✓ Dependencies Ready</li>
+                                <li>✓ API Connectivity</li>
+                                <li>✓ Database Access</li>
+                                <li>✓ All Systems Go</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 2: MCP CONNECTION -->
+                <div class="stage mcp">
+                    <h2>
+                        <span class="stage-icon">🔌</span>
+                        Stage 2: MCP Connection & Data Intake
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>MCP Server Connection</h4>
+                            <ul>
+                                <li>GitHub MCP (Enabled)</li>
+                                <li>Repository: gayatridayz6/STLCPipeline</li>
+                                <li>Auth Mode: OAuth Token</li>
+                                <li>Endpoint: GitHub API v3</li>
+                                <li>Status: Connected</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Data Intake Sources</h4>
+                            <ul>
+                                <li>📄 Requirements Documents</li>
+                                <li>🐙 GitHub Issues & PRs</li>
+                                <li>📊 Test Results</li>
+                                <li>🔐 Security Scans</li>
+                                <li>📈 Build Artifacts</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Data Processing</h4>
+                            <ul>
+                                <li>Parse Requirement Specs</li>
+                                <li>Extract Acceptance Criteria</li>
+                                <li>Identify Coverage Gaps</li>
+                                <li>Map Risk Levels</li>
+                                <li>Create Traceability Matrix</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>🔐 Auth Configuration:</strong> Uses GitHub Token (GITHUB_TOKEN) via secure environment variable for PR creation and automated code review
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 3: AGENTS -->
+                <div class="stage agents">
+                    <h2>
+                        <span class="stage-icon">🤖</span>
+                        Stage 3: Agent Orchestration <span class="count-badge">7 Agents</span>
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Requirement Analysis Agent</h4>
+                            <div class="agent-box">Agent: requirement-analyzer</div>
+                            <p>Processes requirements documents, extracts criteria, identifies gaps</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Test Planning Agent</h4>
+                            <div class="agent-box">Agent: test-strategist</div>
+                            <p>Creates risk-based test plans, coverage matrices, execution strategies</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>BDD Scenario Agent</h4>
+                            <div class="agent-box">Agent: bdd-generator</div>
+                            <p>Transforms requirements to BDD-ready scenarios with traceability</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Implementation Agent</h4>
+                            <div class="agent-box">Agent: implementation-lead</div>
+                            <p>Breaks down features into tasks, coordinates development activities</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Test Execution Agent</h4>
+                            <div class="agent-box">Agent: test-executor</div>
+                            <p>Runs automated tests, collects evidence, reports results</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Security Agent</h4>
+                            <div class="agent-box">Agent: security-reviewer</div>
+                            <p>Analyzes security scans, compliance findings, generates reports</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Code Review Agent</h4>
+                            <div class="agent-box">Agent: pr-reviewer</div>
+                            <p>Prepares PR materials, generates merge checklists for GitHub</p>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>🔄 Agent Communication:</strong> Agents communicate via event-driven hooks, passing artifacts and results through the pipeline
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 4: SKILLS -->
+                <div class="stage skills">
+                    <h2>
+                        <span class="stage-icon">⚙️</span>
+                        Stage 4: Skills Execution <span class="count-badge">5 Skill Categories</span>
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Requirement Analysis Skill</h4>
+                            <div class="skill-box">Skill: requirement-analysis</div>
+                            <ul>
+                                <li>Parse & structure requirements</li>
+                                <li>Extract acceptance criteria</li>
+                                <li>Create coverage matrix</li>
+                                <li>Identify risk areas</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Implementation Planning Skill</h4>
+                            <div class="skill-box">Skill: implementation-planning</div>
+                            <ul>
+                                <li>Create implementation roadmap</li>
+                                <li>Design test scenarios</li>
+                                <li>Map traceability</li>
+                                <li>Log assumptions</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Test Engineering Skill</h4>
+                            <div class="skill-box">Skill: test-engineering</div>
+                            <ul>
+                                <li>Execute test suites</li>
+                                <li>Collect evidence</li>
+                                <li>Audit results</li>
+                                <li>Generate reports</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Coding Standards Skill</h4>
+                            <div class="skill-box">Skill: coding-standards</div>
+                            <ul>
+                                <li>Validate code quality</li>
+                                <li>Check style compliance</li>
+                                <li>Verify security gates</li>
+                                <li>Prepare review materials</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Git Delivery Skill</h4>
+                            <div class="skill-box">Skill: git-delivery</div>
+                            <ul>
+                                <li>Manage branching</li>
+                                <li>Verify merge readiness</li>
+                                <li>Coordinate versioning</li>
+                                <li>Validate deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 5: HOOKS -->
+                <div class="stage hooks">
+                    <h2>
+                        <span class="stage-icon">🪝</span>
+                        Stage 5: Hook Execution <span class="count-badge">12 Hooks</span>
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Requirement Phase Hooks</h4>
+                            <div class="hook-box">Hook: post-requirement-intake</div>
+                            <p>Triggers requirement parsing & validation</p>
+                            <div class="hook-box" style="margin-top: 8px;">Hook: pre-planning</div>
+                            <p>Prepares data for test strategy</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Planning Phase Hooks</h4>
+                            <div class="hook-box">Hook: post-planning</div>
+                            <p>Triggers scenario generation</p>
+                            <div class="hook-box" style="margin-top: 8px;">Hook: pre-implementation</div>
+                            <p>Validates readiness for dev</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Implementation Phase Hooks</h4>
+                            <div class="hook-box">Hook: post-development</div>
+                            <p>Triggers code quality checks</p>
+                            <div class="hook-box" style="margin-top: 8px;">Hook: pre-testing</div>
+                            <p>Prepares test environment</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Testing Phase Hooks</h4>
+                            <div class="hook-box">Hook: post-execution</div>
+                            <p>Collects & audits evidence</p>
+                            <div class="hook-box" style="margin-top: 8px;">Hook: pre-review</div>
+                            <p>Prepares quality summary</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Delivery Phase Hooks</h4>
+                            <div class="hook-box">Hook: post-analysis</div>
+                            <p>Prepares review materials</p>
+                            <div class="hook-box" style="margin-top: 8px;">Hook: pre-deployment</div>
+                            <p>Final validation checks</p>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>⚡ Hook Chain:</strong> Each hook triggers the next agent/skill in sequence, creating an orchestrated pipeline flow. Hooks can be conditional based on quality gates and risk assessments.
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 6: HUMAN IN LOOP -->
+                <div class="stage hitl">
+                    <h2>
+                        <span class="stage-icon">👤</span>
+                        Stage 6: Human-in-the-Loop Validation
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Review Points</h4>
+                            <ul>
+                                <li>Requirements Approval</li>
+                                <li>Test Plan Review</li>
+                                <li>Scenario Validation</li>
+                                <li>Test Results Audit</li>
+                                <li>PR Merge Decision</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Decision Gates</h4>
+                            <ul>
+                                <li>Risk Assessment</li>
+                                <li>Quality Criteria Met</li>
+                                <li>Coverage Sufficient</li>
+                                <li>Security Cleared</li>
+                                <li>Ready for Prod</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Feedback Loops</h4>
+                            <ul>
+                                <li>Request Changes</li>
+                                <li>Mark for Rework</li>
+                                <li>Approve with Notes</li>
+                                <li>Escalate Blockers</li>
+                                <li>Approve & Proceed</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>👥 Stakeholders:</strong> QA Leads, Security Engineers, Product Managers, Tech Leads review automated findings and make final go/no-go decisions
+                    </div>
+                </div>
+                
+                <div class="arrow">↓</div>
+                
+                <!-- STAGE 7: SELF-HEALING -->
+                <div class="stage healing">
+                    <h2>
+                        <span class="stage-icon">🔧</span>
+                        Stage 7: Self-Healing & Recovery
+                    </h2>
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <h4>Failure Detection</h4>
+                            <ul>
+                                <li>Monitor Test Failures</li>
+                                <li>Track Quality Gates</li>
+                                <li>Alert on Blockers</li>
+                                <li>Identify Root Causes</li>
+                                <li>Categorize Issues</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Self-Healing Actions</h4>
+                            <ul>
+                                <li>Auto-Retry Flaky Tests</li>
+                                <li>Regenerate Test Data</li>
+                                <li>Fix Minor Issues</li>
+                                <li>Suggest Improvements</li>
+                                <li>Escalate Critical Issues</li>
+                            </ul>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Recovery Mechanisms</h4>
+                            <ul>
+                                <li>Rollback Changes</li>
+                                <li>Reset Test State</li>
+                                <li>Retry Operations</li>
+                                <li>Document Failures</li>
+                                <li>Notify Stakeholders</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>🚨 Self-Healing Agent:</strong> Monitors pipeline health, detects failures, implements recovery strategies autonomously. Escalates to humans only when manual intervention is required.
+                    </div>
+                </div>
+                
+                <div class="connection-line">✅ Pipeline Complete</div>
+                
+            </div>
+            
+            <!-- LEGEND -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e74c3c;"></div>
+                    <span>System Loading</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9b59b6;"></div>
+                    <span>MCP Connection</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #27ae60;"></div>
+                    <span>Agents (7)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12;"></div>
+                    <span>Skills (5)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #16a085;"></div>
+                    <span>Hooks (12)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #c0392b;"></div>
+                    <span>Human Loop</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2980b9;"></div>
+                    <span>Self-Healing</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>STLC Pipeline v1.0 | Architecture Flow Diagram | Agentic AI Native Framework | Built for Demo Explanations</p>
+        </div>
+    </div>
+</body>
+</html>

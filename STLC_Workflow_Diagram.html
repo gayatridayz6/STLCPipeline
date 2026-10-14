@@ -1,0 +1,510 @@
+/00-stlc-pipeline --ticket=STL-101<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STLC Pipeline - Copilot Artifact Stack Flow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; }
+        
+        .mcp-header {
+            background: #ffd6d6;
+            border: 2px solid #c0392b;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .mcp-header strong { color: #c0392b; }
+        
+        .title { font-size: 16px; font-weight: bold; margin: 20px 0 15px 0; color: #2c3e50; }
+        
+        .artifact-stack {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .stack-box {
+            border: 1px solid #999;
+            border-radius: 4px;
+            padding: 12px;
+            background: #f9f9f9;
+            font-size: 11px;
+        }
+        
+        .stack-box h3 {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        .stack-box .item {
+            padding: 3px 0;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .stack-box .item.path {
+            font-family: monospace;
+            color: #c0392b;
+            font-size: 10px;
+            background: #ffe6e6;
+            padding: 3px 4px;
+            border-radius: 2px;
+            margin: 3px 0;
+        }
+        
+        .workflow-title { 
+            font-size: 13px; 
+            font-weight: bold; 
+            margin: 25px 0 15px 0; 
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .stage-box {
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 11px;
+            position: relative;
+        }
+        
+        .stage-box h4 {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        .stage-box .content {
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        .stage-box .content div {
+            margin: 4px 0;
+            padding: 2px 0;
+        }
+        
+        /* Stage colors */
+        .stage-blue { border-top: 3px solid #3498db; background: #ebf5fb; }
+        .stage-yellow { border-top: 3px solid #f39c12; background: #fef5e7; }
+        .stage-green { border-top: 3px solid #27ae60; background: #eafaf1; }
+        .stage-purple { border-top: 3px solid #8e44ad; background: #f4ecf7; }
+        .stage-orange { border-top: 3px solid #e74c3c; background: #fadbd8; }
+        .stage-teal { border-top: 3px solid #16a085; background: #d1f2eb; }
+        
+        .mcp-label {
+            display: inline-block;
+            background: #ffcccc;
+            color: #c0392b;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .config-artifact-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .config-box {
+            border: 1px solid #999;
+            border-radius: 4px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        
+        .config-box h3 {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .config-item {
+            font-size: 11px;
+            margin: 6px 0;
+            padding: 5px;
+            background: white;
+            border-left: 3px solid #3498db;
+            padding-left: 8px;
+        }
+        
+        .config-item.input { border-left-color: #3498db; }
+        .config-item.storage { border-left-color: #27ae60; }
+        .config-item.output { border-left-color: #e74c3c; }
+        
+        .config-item strong { color: #2c3e50; }
+        .config-item .path { font-family: monospace; color: #666; font-size: 10px; }
+        
+        .legend {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin: 20px 0;
+            font-size: 11px;
+            border-radius: 4px;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            font-size: 18px;
+            color: #999;
+            margin: 10px 0;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+        
+        .note strong { color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- MCP INTEGRATION LAYER HEADER -->
+        <div class="mcp-header">
+            <strong>MCP INTEGRATION LAYER:</strong> All agentic interactions now flow through MCP. Jenkins Server calls to jenkins-mcp integration (get_build_info | fetch_test_report | trigger_build | get_build_status)
+        </div>
+        
+        <!-- ARTIFACT STACK -->
+        <div class="title">Copilot Prompt-Engineering Artifact Stack</div>
+        <div class="artifact-stack">
+            <!-- Orchestration -->
+            <div class="stack-box">
+                <h3>Orchestration (1)</h3>
+                <div class="item path">stlc-orchestrator-agent.md</div>
+                <div class="item">Main enterprise orchestrator running EPAM STLC pipeline</div>
+                <div class="item">Entry point: Jira issue + build number</div>
+                <div class="item" style="margin-top: 8px; font-weight: bold;">Subagents:</div>
+                <div class="item">→ triage-agent</div>
+                <div class="item">→ qa-strategist-agent</div>
+                <div class="item">→ qa-sentinel-agent</div>
+                <div class="item">→ engineer-agent</div>
+            </div>
+            
+            <!-- Instructions -->
+            <div class="stack-box">
+                <h3>Instructions (1)</h3>
+                <div class="item path">stlc.md</div>
+                <div class="item">Stage procedures, QE Radar rules, troubleshooting</div>
+                <div class="item" style="margin-top: 8px; font-weight: bold;">Arguments:</div>
+                <div class="item">--ticket=TICKET-1234</div>
+                <div class="item">--resume</div>
+                <div class="item">--from=stage-03</div>
+                <div class="item">--text="requirement"</div>
+            </div>
+            
+            <!-- Skills -->
+            <div class="stack-box">
+                <h3>Skills (8)</h3>
+                <div class="item path">01-requirements-analysis.md</div>
+                <div class="item path">02-test-planning.md</div>
+                <div class="item path">03-test-design.md</div>
+                <div class="item path">04a-engineering.md</div>
+                <div class="item path">04b-execution.md</div>
+                <div class="item path">05-security-gate.md</div>
+                <div class="item path">06-pr-review.md</div>
+                <div class="item path">07-hitl-gate.md</div>
+            </div>
+            
+            <!-- MCP Server -->
+            <div class="stack-box">
+                <h3>MCP Server</h3>
+                <div class="item path">github_mcp_config.json</div>
+                <div class="item">gayatridayz6/STLCPipeline</div>
+                <div class="item path" style="margin-top: 8px;">jenkins_mcp_config.json</div>
+                <div class="item">Jenkins build & test integration</div>
+                <div class="item" style="margin-top: 8px; font-weight: bold;">MCP Tools:</div>
+                <div class="item">• get_build_info</div>
+                <div class="item">• fetch_test_report</div>
+                <div class="item">• trigger_build</div>
+                <div class="item">• get_build_status</div>
+            </div>
+            
+            <!-- Hooks -->
+            <div class="stack-box">
+                <h3>Hooks (2)</h3>
+                <div class="item path">pre-stage-validation.py</div>
+                <div class="item">→ jenkins-post-build-md</div>
+                <div class="item path" style="margin-top: 8px;">approval_gate_guard.py</div>
+                <div class="item">→ jenkins-post-build-md</div>
+            </div>
+        </div>
+        
+        <!-- CONFIG - ARTIFACTS - COMMANDS SECTION -->
+        <div class="title">Configuration, Storage & Command Flow</div>
+        <div class="config-artifact-section">
+            <!-- CONFIG INPUTS -->
+            <div class="config-box">
+                <h3>📥 CONFIG - Input Sources</h3>
+                <div class="config-item input">
+                    <strong>project.json</strong>
+                    <div class="path">.claude/config/project.json</div>
+                    <div>Pipeline configuration & stage mapping</div>
+                </div>
+                <div class="config-item input">
+                    <strong>github_mcp_config.json</strong>
+                    <div class="path">.claude/config/mcp/</div>
+                    <div>GitHub OAuth token, repo details</div>
+                </div>
+                <div class="config-item input">
+                    <strong>jenkins_mcp_config.json</strong>
+                    <div class="path">.claude/config/mcp/</div>
+                    <div>Jenkins build endpoint & credentials</div>
+                </div>
+                <div class="config-item input">
+                    <strong>Jira Ticket Input</strong>
+                    <div class="path">--ticket=TICKET-1234</div>
+                    <div>User provides Jira issue key to pipeline</div>
+                </div>
+            </div>
+            
+            <!-- ARTIFACTS STORAGE -->
+            <div class="config-box">
+                <h3>💾 ARTIFACTS - Storage & State</h3>
+                <div class="config-item storage">
+                    <strong>requirement_analysis.md</strong>
+                    <div>✓ Stage 1 output - parsed requirements</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>test_planning.md</strong>
+                    <div>✓ Stage 2 output - test strategy</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>test_design.md</strong>
+                    <div>✓ Stage 3 output - test scenarios</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>test_execution_report.md</strong>
+                    <div>✓ Stage 4b output - execution evidence</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>security_compliance_report.md</strong>
+                    <div>✓ Stage 5 output - security findings</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>pr_review_summary.md</strong>
+                    <div>✓ Stage 6 output - merge readiness</div>
+                </div>
+                <div class="config-item storage">
+                    <strong>hitl_audit_trail.md</strong>
+                    <div>✓ Stage 7 output - human decisions</div>
+                </div>
+            </div>
+            
+            <!-- COMMANDS - Execution & Output -->
+            <div class="config-box">
+                <h3>⚡ COMMANDS - Execution Output</h3>
+                <div class="config-item output">
+                    <strong>stlc.md execution</strong>
+                    <div>→ Triggers orchestrator flow</div>
+                </div>
+                <div class="config-item output">
+                    <strong>MCP: get_build_info</strong>
+                    <div>← Returns: build metadata, status</div>
+                </div>
+                <div class="config-item output">
+                    <strong>MCP: fetch_test_report</strong>
+                    <div>← Returns: test results, coverage data</div>
+                </div>
+                <div class="config-item output">
+                    <strong>MCP: trigger_build</strong>
+                    <div>← Returns: build job ID, status</div>
+                </div>
+                <div class="config-item output">
+                    <strong>MCP: get_build_status</strong>
+                    <div>← Returns: pass/fail, logs, artifacts</div>
+                </div>
+                <div class="config-item output">
+                    <strong>Hooks: pre-check</strong>
+                    <div>→ Validates input before stage</div>
+                </div>
+                <div class="config-item output">
+                    <strong>Hooks: post-check</strong>
+                    <div>→ Enforces approval gates</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 8-STAGE WORKFLOW -->
+        <div class="workflow-title">8-Stage Workflow (branches/loop shown) - MCP Integration Points</div>
+        <div class="workflow-grid">
+            <!-- Stage 1 -->
+            <div class="stage-box stage-blue">
+                <h4>1. Take Input</h4>
+                <div class="content">
+                    <div><strong>Agent:</strong> triage-agent</div>
+                    <div><strong>Input:</strong> Jira ticket</div>
+                    <div><strong>Process:</strong> Parse requirement</div>
+                    <div><strong>Output:</strong> Routing decision</div>
+                    <div class="mcp-label">PRE-CHECK</div>
+                </div>
+            </div>
+            
+            <!-- Stage 2 -->
+            <div class="stage-box stage-blue">
+                <h4>2. Fetch Build Data</h4>
+                <div class="content">
+                    <div><strong>Agent:</strong> qa-strategist</div>
+                    <div><strong>MCP Call:</strong> get_build_info</div>
+                    <div><strong>Fetches:</strong> Build metadata, test report</div>
+                    <div class="mcp-label">MCP TRIGGER</div>
+                </div>
+            </div>
+            
+            <!-- Stage 3 -->
+            <div class="stage-box stage-blue">
+                <h4>3. Analyze & Summarize</h4>
+                <div class="content">
+                    <div><strong>Agent:</strong> qa-sentinel</div>
+                    <div><strong>Analyzes:</strong> Pass/Failed/Skipped metrics</div>
+                    <div><strong>Output:</strong> Test planning artifact</div>
+                    <div class="mcp-label">POST-CHECK</div>
+                </div>
+            </div>
+            
+            <!-- Stage 4A -->
+            <div class="stage-box stage-yellow">
+                <h4>4A. Human Review [Human]</h4>
+                <div class="content">
+                    <div><strong>Gate:</strong> HITL approval required</div>
+                    <div><strong>Reviews:</strong> Test plan adequacy</div>
+                    <div><strong>Decision:</strong> Approve/Reject/Modify</div>
+                    <div class="mcp-label">APPROVAL GATE</div>
+                </div>
+            </div>
+            
+            <!-- Stage 5 -->
+            <div class="stage-box stage-yellow">
+                <h4>5. RCA + QE Radar Tag</h4>
+                <div class="content">
+                    <div><strong>Analyzes:</strong> Root cause analysis</div>
+                    <div><strong>Tags:</strong> QE Radar categories</div>
+                    <div><strong>Output:</strong> Categorized issues</div>
+                </div>
+            </div>
+            
+            <!-- Stage 6 -->
+            <div class="stage-box stage-green">
+                <h4>6. Human Approval [Human]</h4>
+                <div class="content">
+                    <div><strong>Gate:</strong> Final approval required</div>
+                    <div><strong>Category:</strong> approve/fix/confidence</div>
+                    <div class="mcp-label">APPROVAL GATE</div>
+                </div>
+            </div>
+            
+            <!-- Stage 7 -->
+            <div class="stage-box stage-green">
+                <h4>7. Fix, Push & Re-run</h4>
+                <div class="content">
+                    <div><strong>Triggers:</strong> Pre-push HOOK + MCP trigger</div>
+                    <div><strong>MCP:</strong> trigger_build</div>
+                    <div><strong>Monitors:</strong> get_build_status piling</div>
+                </div>
+            </div>
+            
+            <!-- Stage 8 -->
+            <div class="stage-box stage-purple">
+                <h4>8. Publish Summary</h4>
+                <div class="content">
+                    <div><strong>Output:</strong> approve → Confidence</div>
+                    <div><strong>Artifact:</strong> test_closure_metrics.md</div>
+                    <div class="mcp-label">FINAL</div>
+                </div>
+            </div>
+            
+            <!-- Stage 9 -->
+            <div class="stage-box stage-purple">
+                <h4>9. Log Defect (if any)</h4>
+                <div class="content">
+                    <div><strong>Creates:</strong> Standard template → Confluence</div>
+                    <div><strong>Links:</strong> Jira ticket → defect log</div>
+                    <div class="mcp-label">CLOSURE</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LEGEND -->
+        <div class="legend">
+            <strong>Legend:</strong>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #3498db;"></span>
+                Stages 1-3 (Input/Fetch/Summarize) - MCP Enabled
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #f39c12;"></span>
+                Stages 4-6 (RCA/Classify) - HITL Gate
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #27ae60;"></span>
+                Stages 6-7 (Fix/Push/Re-run) - MCP Trigger
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #8e44ad;"></span>
+                Stages 8-9 (Publish/Defect)
+            </div>
+            <div class="legend-item">
+                <span style="border-bottom: 3px dashed #999;padding-bottom: 5px;">- - - -</span>
+                dashed = branching/loop back
+            </div>
+        </div>
+        
+        <!-- NOTES -->
+        <div class="note">
+            <strong>📊 Data Flow Summary:</strong><br/>
+            <strong>INPUT:</strong> Jira ticket + Build number<br/>
+            <strong>CONFIG:</strong> project.json, MCP configs (GitHub, Jenkins)<br/>
+            <strong>COMMANDS:</strong> stlc.md executes via orchestrator → stages invoke MCP tools (get_build_info, fetch_test_report, trigger_build, get_build_status)<br/>
+            <strong>ARTIFACTS:</strong> Stage outputs stored in /artifacts/ directory (requirement_analysis.md, test_planning.md, test_execution_report.md, security_compliance_report.md, pr_review_summary.md, hitl_audit_trail.md)<br/>
+            <strong>HOOKS:</strong> Pre-check validates inputs before stage | Post-check enforces approval gates + MCP triggers
+        </div>
+    </div>
+</body>
+</html>

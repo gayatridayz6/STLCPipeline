@@ -93,6 +93,51 @@ Use the orchestrator with placeholder Jira and GitHub inputs to demonstrate:
 - For live demos, the executor can inject real telemetry into `window.STLC_DASHBOARD_DATA` or generate the same JSON shape before opening the report.
 - Token usage is currently sample data only and should be replaced by runtime telemetry when available.
 
+## Per-run Token Dashboard (Claude Code)
+
+The main pipeline commands now produce a standalone HTML token report. Launch
+Claude Code **from `stlc-pipeline`**, with Python on PATH, and restart it after
+adding the local `.claude/settings.json` hooks. The workflow initializes a unique
+dashboard run ID and tags each synchronous Agent/Task prompt. The post-tool hook
+reads measured API usage from that subagent's local transcript and updates:
+
+- `artifacts/runs/<run-id>/stlc_dashboard.html`: totals, per-agent breakdown,
+  input/output/cache tokens, invocation counts, telemetry coverage and run status.
+- `artifacts/runs/<run-id>/token_usage.json`: counters only, without transcript text.
+
+Run `/00-stlc-pipeline --ticket=STL-101` (or `/stlc --ticket=STL-101`) to load
+the updated local wrapper. Invoking `/claude-stlc` directly selects the installed
+plugin and may bypass these local dashboard instructions.
+
+Open the HTML directly in your browser; no server, network requests or packages
+are needed. The orchestrator finalizes it after closure, the abbreviated reuse
+route, or a blocked/approval stop, and returns a link. A resumed workflow reuses
+its checkpoint's dashboard ID; a fresh execution uses a new ID.
+
+Totals include uncached input, output, cache-creation input and cache-read input.
+Repeated message snapshots and cumulative resumed subagent transcripts are
+deduplicated. Missing telemetry is **N/A**, not zero; partial totals cover only
+measured calls. Inline skill execution and the parent coordinator cannot be
+measured separately by this hook. Background subagents are not supported.
+The older demo dashboard remains sample-only; the new report never uses it as
+runtime evidence. The Python workflow recorder does not execute Claude agents
+and is not a token measurement source.
+
+Manual initialization/finalization (run from `stlc-pipeline`):
+
+```powershell
+python workflow\token_dashboard.py init --run STL-101-20261013T113846 --label STL-101
+# Each Agent/Task prompt starts with [STLC run=STL-101-20261013T113846 agent=triage-agent]
+python workflow\token_dashboard.py finalize --run STL-101-20261013T113846 --status completed
+```
+
+Use `--status blocked --reason "Awaiting approval"` or `--status failed` as needed.
+If Claude Code does not expose `agentId` or the expected transcript counters,
+the hook explicitly reports unavailable telemetry. Hook/generation failures must
+be surfaced, not described as successful measurement. The namespaced
+`claude-stlc` skill is provided by your installed plugin: any plugin executor
+must honor the local command's tagging contract to make its calls measurable.
+
 Removed legacy content:
 
 - root-level `config/`, `docs/`, `hooks/`, `mcp/`, `skills/`, and `stages/`

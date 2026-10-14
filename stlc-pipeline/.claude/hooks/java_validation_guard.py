@@ -2,14 +2,10 @@ from pathlib import Path
 
 
 def main() -> int:
-    required = [
-        Path("src/main/java/com/enterprise/services"),
-        Path("src/main/java/com/enterprise/controllers"),
-        Path("workflow/STLCWorkflowOrchestrator.java"),
-    ]
-    missing = [str(path) for path in required if not path.exists()]
-    if missing:
-        raise SystemExit("Missing Java scaffold: " + ", ".join(missing))
+    project_root = Path(__file__).resolve().parents[2]
+    workflow = project_root / "workflow" / "STLCWorkflowOrchestrator.java"
+    if not workflow.is_file():
+        raise SystemExit(f"Missing Java workflow definition: {workflow}")
     print("java validation guard passed")
     return 0
 

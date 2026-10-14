@@ -4,6 +4,11 @@ Run the full enterprise STLC multi-agent pipeline from requirement intake throug
 
 Arguments: `$ARGUMENTS`
 
+First apply the Token dashboard contract in `.claude/commands/00-stlc-pipeline.md`:
+initialize a unique run ID, tag synchronous subagent prompts, and finalize/link
+the run's HTML dashboard after execution or an approval/blocker stop.
+On resume, reuse the checkpoint's dashboard run ID.
+
 To run the pipeline, invoke the skill using the Skill tool:
 
 ```text

@@ -1,0 +1,20 @@
+Issue key: EPMCDMETST-66524
+Source: User-pasted requirements; Jira issue content could not be verified (Cloudflare 403).
+
+As a user, I want to search for a book by typing its title in the search bar so that I can quickly find it.
+
+Acceptance Criteria:
+AC1: Entering an existing book title and clicking search displays the correct book details.
+AC2: Entering a non-existent book title displays a "No books found" message.
+
+Feature: Book Store Search
+
+Scenario: Search for an existing book
+  Given the user is on the book store homepage
+  When the user searches for "Java Programming"
+  Then the book details for "Java Programming" are displayed
+
+Scenario: Search for a non-existent book
+  Given the user is on the book store homepage
+  When the user searches for "Unknown Book XYZ"
+  Then the message "No books found" is displayed

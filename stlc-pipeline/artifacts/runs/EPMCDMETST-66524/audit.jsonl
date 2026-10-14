@@ -1,0 +1,11 @@
+{"at": "2026-09-30T11:16:07+00:00", "event": "real-app-execution-waived", "stage": "stage-04b", "by": "User (explicit chat waiver)", "reason": "No real Book Store target; proceed with review-only stages without real-app execution"}
+{"at": "2026-10-02T03:45:55+00:00", "event": "approved", "stage": "stage-04b", "by": "User (explicit chat approval)"}
+{"at": "2026-10-02T03:45:55+00:00", "event": "completed", "stage": "stage-04b"}
+{"at": "2026-10-02T03:50:37+00:00", "event": "approved", "stage": "stage-05", "by": "User (explicit chat approval)"}
+{"at": "2026-10-02T03:50:37+00:00", "event": "completed", "stage": "stage-05"}
+{"at": "2026-10-02T04:00:09+00:00", "event": "approved", "stage": "stage-06", "by": "User (explicit chat approval)"}
+{"at": "2026-10-02T04:00:09+00:00", "event": "completed", "stage": "stage-06"}
+{"at": "2026-10-02T04:01:13+00:00", "event": "approved", "stage": "stage-07", "by": "User (explicit go for review-only closure)"}
+{"at": "2026-10-02T04:01:13+00:00", "event": "completed", "stage": "stage-07"}
+{"at": "2026-10-02T04:01:51+00:00", "event": "approved", "stage": "stage-08", "by": "User (explicit chat approval)"}
+{"at": "2026-10-02T04:01:51+00:00", "event": "completed", "stage": "stage-08"}

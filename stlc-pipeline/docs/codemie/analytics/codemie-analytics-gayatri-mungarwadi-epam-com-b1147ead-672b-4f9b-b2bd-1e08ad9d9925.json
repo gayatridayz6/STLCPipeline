@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "generatedAt": "2026-10-13T10:52:32.983Z",
+    "rangeLabel": "all",
+    "agents": [
+      "claude"
+    ],
+    "projectFilter": "all",
+    "totals": {
+      "sessions": 1,
+      "durationMs": 79257,
+      "turns": 1,
+      "files": 0,
+      "netLines": 0,
+      "toolCallsTotal": 0,
+      "toolSuccessRate": 0,
+      "totalCostUSD": 0,
+      "cacheReadCostUSD": 0,
+      "pricedSessions": 0
+    },
+    "unpricedModels": [],
+    "estimatedModels": [],
+    "localModels": [],
+    "coverage": [
+      {
+        "agentName": "claude",
+        "total": 1,
+        "priced": 0,
+        "withLog": 1
+      }
+    ],
+    "userEmail": "gayatri_mungarwadi@epam.com",
+    "periodStart": "2026-10-13T10:51:09.955Z",
+    "periodEnd": "2026-10-13T10:52:29.212Z"
+  },
+  "sessions": [
+    {
+      "sessionId": "b1147ead-672b-4f9b-b2bd-1e08ad9d9925",
+      "agentName": "claude",
+      "provider": "ai-run-sso",
+      "title": "/00-stlc-pipeline",
+      "project": "C:\\Users\\gayatri_mungarwadi\\Documents\\Capston\\CLAUDE_CAPSTON\\AgenticAINativeAi\\stlc-pipeline",
+      "branch": "main",
+      "startTime": 1791888669955,
+      "durationMs": 79257,
+      "turns": 1,
+      "fileOps": 0,
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "linesModified": 0,
+      "netLines": 0,
+      "filesChanged": 0,
+      "filesWritten": 0,
+      "filesEdited": 0,
+      "toolCallsTotal": 0,
+      "toolCallsSuccess": 0,
+      "toolCallsFailure": 0,
+      "models": [
+        "<synthetic>"
+      ],
+      "languages": [],
+      "tools": [],
+      "tokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "costUSD": 0,
+      "cacheReadCostUSD": 0,
+      "perModelCost": [],
+      "hadLog": true,
+      "agentSessionFile": "C:\\Users\\gayatri_mungarwadi\\.claude\\projects\\C--Users-gayatri-mungarwadi-Documents-Capston-CLAUDE-CAPSTON-AgenticAINativeAi-stlc-pipeline\\07086d06-b638-4497-8a7e-7db844eaa027.jsonl",
+      "dispatches": [
+        {
+          "kind": "command",
+          "name": "00-stlc-pipeline",
+          "start": 1791888702734,
+          "durationMs": 0,
+          "id": "command:ca5f66dc-86ec-466b-b6d7-2a2023fd8500:0",
+          "ownerAgentId": "b1147ead-672b-4f9b-b2bd-1e08ad9d9925",
+          "relationshipStatus": "root",
+          "elapsedMs": 0,
+          "status": "completed",
+          "attributionStatus": "unavailable",
+          "attributionScope": "owner-window"
+        }
+      ],
+      "dispatchesComplete": true,
+      "rootOwnCostUSD": 0,
+      "unlinkedCostUSD": 0,
+      "unlinkedAgentIds": [],
+      "rootOwnTokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "unlinkedTokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "skillInvocations": [],
+      "agentInvocations": [],
+      "commandInvocations": [
+        {
+          "name": "00-stlc-pipeline",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0
+        }
+      ],
+      "sessionSource": "Pure chat"
+    }
+  ]
+}

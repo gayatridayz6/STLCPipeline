@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "generatedAt": "2026-10-13T10:50:20.904Z",
+    "rangeLabel": "all",
+    "agents": [
+      "claude"
+    ],
+    "projectFilter": "all",
+    "totals": {
+      "sessions": 1,
+      "durationMs": 15735069,
+      "turns": 2,
+      "files": 0,
+      "netLines": 0,
+      "toolCallsTotal": 0,
+      "toolSuccessRate": 0,
+      "totalCostUSD": 0,
+      "cacheReadCostUSD": 0,
+      "pricedSessions": 0
+    },
+    "unpricedModels": [],
+    "estimatedModels": [],
+    "localModels": [],
+    "coverage": [
+      {
+        "agentName": "claude",
+        "total": 1,
+        "priced": 0,
+        "withLog": 1
+      }
+    ],
+    "userEmail": "gayatri_mungarwadi@epam.com",
+    "periodStart": "2026-10-13T06:28:02.535Z",
+    "periodEnd": "2026-10-13T10:50:17.604Z"
+  },
+  "sessions": [
+    {
+      "sessionId": "164c6188-ac41-48d0-992e-11f84a74832c",
+      "agentName": "claude",
+      "provider": "ai-run-sso",
+      "title": "EPMCDMETST-66524",
+      "project": "C:\\Users\\gayatri_mungarwadi\\Documents\\Capston\\CLAUDE_CAPSTON\\AgenticAINativeAi\\stlc-pipeline",
+      "branch": "main",
+      "startTime": 1791872882535,
+      "durationMs": 15735069,
+      "turns": 2,
+      "fileOps": 0,
+      "linesAdded": 0,
+      "linesRemoved": 0,
+      "linesModified": 0,
+      "netLines": 0,
+      "filesChanged": 0,
+      "filesWritten": 0,
+      "filesEdited": 0,
+      "toolCallsTotal": 0,
+      "toolCallsSuccess": 0,
+      "toolCallsFailure": 0,
+      "models": [
+        "<synthetic>"
+      ],
+      "languages": [],
+      "tools": [],
+      "tokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "costUSD": 0,
+      "cacheReadCostUSD": 0,
+      "perModelCost": [],
+      "hadLog": true,
+      "agentSessionFile": "C:\\Users\\gayatri_mungarwadi\\.claude\\projects\\C--Users-gayatri-mungarwadi-Documents-Capston-CLAUDE-CAPSTON-AgenticAINativeAi-stlc-pipeline\\b40695a6-2905-4b38-943f-38ca38b8b6fa.jsonl",
+      "dispatchesComplete": true,
+      "rootOwnCostUSD": 0,
+      "unlinkedCostUSD": 0,
+      "unlinkedAgentIds": [],
+      "rootOwnTokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "unlinkedTokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "skillInvocations": [],
+      "agentInvocations": [],
+      "commandInvocations": [],
+      "sessionSource": "Pure chat"
+    }
+  ]
+}
