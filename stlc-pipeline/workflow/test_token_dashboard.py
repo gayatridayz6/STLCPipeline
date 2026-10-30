@@ -221,7 +221,7 @@ class TokenDashboardTests(unittest.TestCase):
         self.write_messages([self.message()])
         hook(self.root, self.event())
         with self.assertRaisesRegex(ValueError, "two STLC agents"):
-            hook(self.root, self.event("qa-runner-agent"))
+            hook(self.root, self.event("execution-agent"))
 
     def test_resume_initialization_does_not_erase_existing_data(self):
         with self.assertRaisesRegex(ValueError, "already exists"):

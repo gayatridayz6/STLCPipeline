@@ -163,14 +163,14 @@
             <!-- Orchestration -->
             <div class="box">
                 <h3>Orchestration (1)</h3>
-                <div class="box-item code">.github/agents/00-stlc-orchestrator-agent.agent.md</div>
+                <div class="box-item code">.github/agents/00-delivery-orchestrator-agent.agent.md</div>
                 <div class="box-item">Coordinates the configured stages and approval gates</div>
                 <div class="box-item" style="margin-top: 6px; font-weight: bold;">Subagents:</div>
                 <div class="box-item">1. triage-agent</div>
-                <div class="box-item">2. qa-strategist-agent</div>
-                <div class="box-item">3. qa-sentinel-agent</div>
+                <div class="box-item">2. planning-agent</div>
+                <div class="box-item">3. test-design-agent</div>
                 <div class="box-item">4a. engineer-agent</div>
-                <div class="box-item">4b. qa-runner-agent</div>
+                <div class="box-item">4b. execution-agent</div>
                 <div class="box-item">5. security-gate-agent</div>
                 <div class="box-item">6. github-mcp-agent</div>
                 <div class="box-item">7. hitl-gate-agent</div>
@@ -234,7 +234,7 @@
             <!-- Stage 2 -->
             <div class="stage stage-blue">
                 <h4>2. Test Planning</h4>
-                <div class="stage-info"><strong>Agent:</strong> qa-strategist-agent</div>
+                <div class="stage-info"><strong>Agent:</strong> planning-agent</div>
                 <div class="stage-info"><strong>Skill:</strong> test-planning-strategist</div>
                 <div class="stage-info"><strong>Input:</strong> Approved Stage 1 analysis</div>
                 <div class="stage-info"><strong>Defines:</strong> Risk, scope, environment, exit criteria</div>
@@ -245,7 +245,7 @@
             <!-- Stage 3 -->
             <div class="stage stage-blue">
                 <h4>3. Test Design & BDD</h4>
-                <div class="stage-info"><strong>Agent:</strong> qa-sentinel-agent</div>
+                <div class="stage-info"><strong>Agent:</strong> test-design-agent</div>
                 <div class="stage-info"><strong>Skill:</strong> bdd-generator</div>
                 <div class="stage-info"><strong>Process:</strong> Create BDD scenarios from approved planning</div>
                 <div class="stage-info"><strong>Output:</strong> test_design.md</div>
@@ -263,7 +263,7 @@
             <!-- Stage 4b -->
             <div class="stage stage-yellow">
                 <h4>4b. Test Execution</h4>
-                <div class="stage-info"><strong>Agent:</strong> qa-runner-agent</div>
+                <div class="stage-info"><strong>Agent:</strong> execution-agent</div>
                 <div class="stage-info"><strong>Gate:</strong> Explicit execution approval and verified target</div>
                 <div class="stage-info"><strong>Output:</strong> test_execution_report.md</div>
             </div>

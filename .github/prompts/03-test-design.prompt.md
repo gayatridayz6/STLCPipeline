@@ -2,7 +2,7 @@
 name: stlc-test-design
 description: Generate Stage 3 BDD test design from approved planning.
 argument-hint: Jira issue key or test-planning artifact
-agent: qa-sentinel-agent
+agent: test-design-agent
 ---
 
 Run Stage 3 for `${input:stlcDesignInput:Enter a Jira issue key or artifact path}`.

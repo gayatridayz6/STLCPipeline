@@ -16,7 +16,7 @@ approval gates.
 
 ## Agent Model
 
-- Main orchestrator: `.github/agents/00-stlc-orchestrator-agent.agent.md`
+- Main orchestrator: `.github/agents/00-delivery-orchestrator-agent.agent.md`
 - Stage agents: numbered `.github/agents/*.agent.md` files, ordered by workflow stage
 - Reusable skills: `.github/skills/*/SKILL.md`
 - VS Code Local prompt entry points: `.github/prompts/*.prompt.md`
@@ -55,12 +55,12 @@ flowchart TD
 	A[Jira Story or Bug] --> O[STLC Orchestrator Agent]
 	O --> S1[Triage Agent]
 	S1 --> G1{HITL Gate}
-	G1 --> S2[QA Strategist Agent]
+	G1 --> S2[Planning Agent]
 	S2 --> G2{HITL Gate}
-	G2 --> S3[QA Sentinel Agent]
+	G2 --> S3[Test Design Agent]
 	S3 --> G3{HITL Gate}
 	G3 --> S4A[Engineer Agent]
-	S4A --> S4B[QA Runner Agent]
+	S4A --> S4B[Execution Agent]
 	S4B --> G4{HITL Gate}
 	G4 --> S5[Security Gate Agent]
 	S5 --> G5{HITL Gate}
@@ -128,7 +128,7 @@ Removed legacy content:
 ## Current Status
 
 - `.github/config/project.json` is the active flow manifest
-- `.github/agents/00-stlc-orchestrator-agent.agent.md` is the main coordinator
+- `.github/agents/00-delivery-orchestrator-agent.agent.md` is the main coordinator
 - `stlc-pipeline/workflow/STLCWorkflowOrchestrator.java` is the active stage graph source
 - `stlc-pipeline/artifacts/` files are the phase outputs the runtime can populate
 - agent execution requires Copilot custom-agent and enabled MCP capabilities

@@ -2,7 +2,7 @@
 name: stlc-test-planning
 description: Create the approved-input risk-based Stage 2 test plan.
 argument-hint: Jira issue key or requirement-analysis artifact
-agent: qa-strategist-agent
+agent: planning-agent
 ---
 
 Run Stage 2 for `${input:stlcPlanningInput:Enter a Jira issue key or artifact path}`.

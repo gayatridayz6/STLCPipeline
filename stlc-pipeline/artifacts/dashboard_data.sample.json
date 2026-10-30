@@ -7,7 +7,7 @@
     "status": "Execution Summary Only"
   },
   "pipeline": {
-    "orchestrator": "stlc-orchestrator-agent",
+    "orchestrator": "delivery-orchestrator-agent",
     "startedAt": "2026-09-24T10:00:00Z",
     "lastUpdatedAt": "2026-09-24T10:18:00Z",
     "completedStages": 4,
@@ -68,7 +68,7 @@
     "estimatedCostUsd": 0.18,
     "byAgent": [
       {
-        "agent": "stlc-orchestrator-agent",
+        "agent": "delivery-orchestrator-agent",
         "tokens": 4850
       },
       {
@@ -76,7 +76,7 @@
         "tokens": 6020
       },
       {
-        "agent": "qa-runner-agent",
+        "agent": "execution-agent",
         "tokens": 3910
       },
       {
@@ -94,19 +94,19 @@
     },
     {
       "name": "Stage 2",
-      "agent": "qa-strategist-agent",
+      "agent": "planning-agent",
       "state": "skipped",
       "summary": "Skipped due to story reuse policy."
     },
     {
       "name": "Stage 3",
-      "agent": "qa-sentinel-agent",
+      "agent": "test-design-agent",
       "state": "skipped",
       "summary": "Skipped to avoid duplicate test generation."
     },
     {
       "name": "Stage 4b",
-      "agent": "qa-runner-agent",
+      "agent": "execution-agent",
       "state": "completed",
       "summary": "Execution summary produced from existing automation."
     },

@@ -11,12 +11,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENTS = {
-    "stlc-orchestrator-agent": "Coordinator",
+    "delivery-orchestrator-agent": "Coordinator",
     "triage-agent": "Stage 1",
-    "qa-strategist-agent": "Stage 2",
-    "qa-sentinel-agent": "Stage 3",
+    "planning-agent": "Stage 2",
+    "test-design-agent": "Stage 3",
     "engineer-agent": "Stage 4a",
-    "qa-runner-agent": "Stage 4b",
+    "execution-agent": "Stage 4b",
     "security-gate-agent": "Stage 5",
     "github-mcp-agent": "Stage 6",
     "hitl-gate-agent": "Stage 7",

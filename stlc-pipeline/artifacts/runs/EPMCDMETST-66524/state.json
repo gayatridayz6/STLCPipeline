@@ -1,97 +1,25 @@
 {
   "ticket": "EPMCDMETST-66524",
-  "current": "complete",
+  "current": "stage-04b",
   "completed": [
     {
       "stage": "stage-01",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-01.md",
-      "at": "2026-09-30T08:29:54+00:00"
-    },
-    {
-      "stage": "stage-02",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-02.md",
-      "at": "2026-09-30T08:30:28+00:00"
-    },
-    {
-      "stage": "stage-03",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-03.md",
-      "at": "2026-09-30T08:30:55+00:00"
-    },
-    {
-      "stage": "stage-04a",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-04a.md",
-      "at": "2026-09-30T08:33:48+00:00"
-    },
-    {
-      "stage": "stage-04b",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-04b.md",
-      "at": "2026-10-02T03:45:55+00:00"
-    },
-    {
-      "stage": "stage-05",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-05.md",
-      "at": "2026-10-02T03:50:37+00:00"
-    },
-    {
-      "stage": "stage-06",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-06.md",
-      "at": "2026-10-02T04:00:09+00:00"
-    },
-    {
-      "stage": "stage-07",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-07.md",
-      "at": "2026-10-02T04:01:13+00:00"
-    },
-    {
-      "stage": "stage-08",
-      "artifact": "artifacts\\runs\\EPMCDMETST-66524\\stage-08.md",
-      "at": "2026-10-02T04:01:51+00:00"
+      "artifact": "stlc-pipeline\\artifacts\\runs\\EPMCDMETST-66524\\stage-01.md",
+      "at": "2026-10-29T10:23:38+00:00"
     }
   ],
   "approvals": {
     "stage-01": {
       "by": "User (explicit chat approval)",
-      "at": "2026-09-30T08:29:06+00:00"
-    },
-    "stage-02": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-09-30T08:30:13+00:00"
-    },
-    "stage-03": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-09-30T08:30:42+00:00"
-    },
-    "stage-04a": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-09-30T08:32:32+00:00"
+      "at": "2026-10-29T10:02:58+00:00"
     },
     "stage-04b": {
       "by": "User (explicit chat approval)",
-      "at": "2026-10-02T03:45:55+00:00"
-    },
-    "stage-05": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-10-02T03:50:37+00:00"
-    },
-    "stage-06": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-10-02T04:00:09+00:00"
-    },
-    "stage-07": {
-      "by": "User (explicit go for review-only closure)",
-      "at": "2026-10-02T04:01:13+00:00"
-    },
-    "stage-08": {
-      "by": "User (explicit chat approval)",
-      "at": "2026-10-02T04:01:51+00:00"
+      "at": "2026-10-29T11:17:40+00:00"
     }
   },
-  "route": "generate-new-tests",
-  "mode": "review-only",
+  "route": "reuse-existing-tests",
+  "mode": "offline",
   "blocker": null,
-  "execution_waiver": {
-    "by": "User (explicit chat waiver)",
-    "at": "2026-09-30T11:16:07+00:00",
-    "reason": "No real Book Store target; proceed with review-only stages without real-app execution"
-  }
+  "execution_waiver": null
 }

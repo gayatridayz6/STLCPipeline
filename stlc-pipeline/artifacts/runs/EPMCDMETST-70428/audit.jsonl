@@ -1,0 +1,12 @@
+{"at": "2026-10-29T12:00:00+00:00", "event": "approved", "stage": "stage-01", "by": "User (explicit chat approval)"}
+{"at": "2026-10-29T12:00:00+00:00", "event": "started", "stage": "stage-01"}
+{"at": "2026-10-29T12:00:00+00:00", "event": "completed", "stage": "stage-01", "artifact": "stlc-pipeline\\artifacts\\runs\\EPMCDMETST-70428\\stage-01.md"}
+{"at": "2026-10-29T12:05:00+00:00", "event": "approved", "stage": "stage-02", "by": "User (explicit chat approval: 'approve')"}
+{"at": "2026-10-29T12:05:00+00:00", "event": "started", "stage": "stage-02"}
+{"at": "2026-10-29T12:10:00+00:00", "event": "completed", "stage": "stage-02", "artifact": "stlc-pipeline\\artifacts\\runs\\EPMCDMETST-70428\\test_planning.md"}
+{"at": "2026-10-29T12:15:00+00:00", "event": "approved", "stage": "stage-03", "by": "User (explicit chat approval: 'approve', after reviewing test_planning.md)"}
+{"at": "2026-10-29T12:15:00+00:00", "event": "started", "stage": "stage-03"}
+{"at": "2026-10-29T12:20:00+00:00", "event": "completed", "stage": "stage-03", "artifact": "stlc-pipeline\\artifacts\\runs\\EPMCDMETST-70428\\test_design.md"}
+{"at": "2026-10-29T12:25:00+00:00", "event": "approved", "stage": "stage-04a", "by": "User (explicit chat approval: 'approve', after open items were listed)"}
+{"at": "2026-10-29T12:25:00+00:00", "event": "started", "stage": "stage-04a"}
+

@@ -218,15 +218,15 @@
             <!-- Orchestration -->
             <div class="stack-box">
                 <h3>Orchestration (1)</h3>
-                <div class="item path">.github/agents/00-stlc-orchestrator-agent.agent.md</div>
+                <div class="item path">.github/agents/00-delivery-orchestrator-agent.agent.md</div>
                 <div class="item">Main enterprise orchestrator running EPAM STLC pipeline</div>
                 <div class="item">Entry point: Jira issue or requirement text</div>
                 <div class="item" style="margin-top: 8px; font-weight: bold;">Subagents:</div>
                 <div class="item">1. triage-agent</div>
-                <div class="item">2. qa-strategist-agent</div>
-                <div class="item">3. qa-sentinel-agent</div>
+                <div class="item">2. planning-agent</div>
+                <div class="item">3. test-design-agent</div>
                 <div class="item">4a. engineer-agent</div>
-                <div class="item">4b. qa-runner-agent</div>
+                <div class="item">4b. execution-agent</div>
                 <div class="item">5. security-gate-agent</div>
                 <div class="item">6. github-mcp-agent</div>
                 <div class="item">7. hitl-gate-agent</div>
@@ -284,7 +284,7 @@
                     <div>Pipeline configuration & stage mapping</div>
                 </div>
                 <div class="config-item input">
-                    <strong>github_mcp_config.json</strong>
+                    <strong>.mcp.json</strong>
                     <div class="path">.github/config/mcp/</div>
                     <div>Integration references; configure MCP in the active Copilot host</div>
                 </div>
@@ -378,7 +378,7 @@
             <div class="stage-box stage-blue">
                 <h4>2. Test Planning</h4>
                 <div class="content">
-                    <div><strong>Agent:</strong> qa-strategist</div>
+                    <div><strong>Agent:</strong> planning</div>
                     <div><strong>Input:</strong> Approved Stage 1 analysis</div>
                     <div><strong>Output:</strong> Risk-based test plan</div>
                     <div class="mcp-label">HUMAN REVIEW</div>
@@ -389,7 +389,7 @@
             <div class="stage-box stage-blue">
                 <h4>3. Test Design & BDD</h4>
                 <div class="content">
-                    <div><strong>Agent:</strong> qa-sentinel</div>
+                    <div><strong>Agent:</strong> test-design</div>
                     <div><strong>Input:</strong> Approved Stage 2 plan</div>
                     <div><strong>Output:</strong> BDD test design</div>
                     <div class="mcp-label">HUMAN REVIEW</div>
@@ -410,7 +410,7 @@
             <div class="stage-box stage-yellow">
                 <h4>4b. Test Execution</h4>
                 <div class="content">
-                    <div><strong>Agent:</strong> qa-runner-agent</div>
+                    <div><strong>Agent:</strong> execution-agent</div>
                     <div><strong>Gate:</strong> Explicit execution approval</div>
                     <div><strong>Output:</strong> Actual execution evidence</div>
                 </div>

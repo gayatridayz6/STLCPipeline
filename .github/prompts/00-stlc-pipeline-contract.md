@@ -32,13 +32,13 @@ an invokable prompt and does not call a `Skill` tool.
    `stlc-pipeline/artifacts/requirement_analysis.md`. Require any configured approval before
    starting. Return exactly one route:
    `reuse-existing-tests` or `generate-new-tests`.
-2. **Test planning** — `qa-strategist-agent`; write
+2. **Test planning** — `planning-agent`; write
    `stlc-pipeline/artifacts/test_planning.md`; require human approval before continuing.
-3. **Test design** — `qa-sentinel-agent`; write `stlc-pipeline/artifacts/test_design.md`;
+3. **Test design** — `test-design-agent`; write `stlc-pipeline/artifacts/test_design.md`;
    require human approval before continuing.
 4a. **Engineering** — `engineer-agent`; require approved design and write
     `stlc-pipeline/artifacts/engineering_summary.md`.
-4b. **Execution** — `qa-runner-agent`; require explicit execution approval and
+4b. **Execution** — `execution-agent`; require explicit execution approval and
     verified target; write `stlc-pipeline/artifacts/test_execution_report.md`. Mark simulations
     and review-only work accurately; do not claim application tests passed.
 5. **Security and compliance** — `security-gate-agent`; use actual approved

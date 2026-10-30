@@ -10,8 +10,8 @@
   "commandRoot": ".github/prompts",
   "orchestratorAgent": ".github/agents/00-stlc-orchestrator-agent.agent.md",
   "mcpBindings": {
-    "jira": ".github/config/mcp/jira_mcp_config.json",
-    "github": ".github/config/mcp/github_mcp_config.json"
+    "jira": ".github/config/mcp/.mcp.json",
+    "github": ".github/config/mcp/.mcp.json"
   },
   "agentRoot": ".github/agents",
   "hookRoot": ".github/hooks",
@@ -19,6 +19,26 @@
   "promptPackagePolicy": {
     "usePromptFilesAsEntryPointsWhenSupported": true,
     "useAgentSkillsForReusableCapabilities": true
+  },
+  "modelRouting": {
+    "policy": "Each agent sets its model in its frontmatter. Use the cheapest model that meets the task. Do not change models mid-run.",
+    "tiers": {
+      "strong": "Claude Opus 4.5",
+      "standard": "Claude Sonnet 4.5",
+      "small": "Claude Haiku 4.5"
+    },
+    "agentModels": {
+      "stlc-orchestrator-agent": "Claude Opus 4.5",
+      "triage-agent": "Claude Haiku 4.5",
+      "planning-agent": "Claude Opus 4.5",
+      "test-design-agent": "Claude Opus 4.5",
+      "engineer-agent": "Claude Opus 4.5",
+      "execution-agent": "Claude Haiku 4.5",
+      "security-gate-agent": "Claude Sonnet 4.5",
+      "github-mcp-agent": "Claude Haiku 4.5",
+      "hitl-gate-agent": "Claude Haiku 4.5",
+      "reporting-closure-agent": "Claude Haiku 4.5"
+    }
   },
   "approvalGates": [
     "design-approval",
@@ -58,8 +78,8 @@
         "stage-04a"
       ],
       "skipSubAgents": [
-        "qa-strategist-agent",
-        "qa-sentinel-agent",
+        "planning-agent",
+        "test-design-agent",
         "engineer-agent"
       ],
       "artifact": "stlc-pipeline/artifacts/test_execution_report.md"
@@ -84,10 +104,10 @@
   },
   "subAgents": {
     "stage-01": ".github/agents/01-triage-agent.agent.md",
-    "stage-02": ".github/agents/02-qa-strategist-agent.agent.md",
-    "stage-03": ".github/agents/03-qa-sentinel-agent.agent.md",
+    "stage-02": ".github/agents/02-planning-agent.agent.md",
+    "stage-03": ".github/agents/03-test-design-agent.agent.md",
     "stage-04a": ".github/agents/04a-engineer-agent.agent.md",
-    "stage-04b": ".github/agents/04b-qa-runner-agent.agent.md",
+    "stage-04b": ".github/agents/04b-execution-agent.agent.md",
     "stage-05": ".github/agents/05-security-gate-agent.agent.md",
     "stage-06": ".github/agents/06-github-mcp-agent.agent.md",
     "stage-07": ".github/agents/07-hitl-gate-agent.agent.md",
@@ -106,10 +126,10 @@
       ],
       "subagents": [
         "triage-agent",
-        "qa-strategist-agent",
-        "qa-sentinel-agent",
+        "planning-agent",
+        "test-design-agent",
         "engineer-agent",
-        "qa-runner-agent",
+        "execution-agent",
         "security-gate-agent",
         "github-mcp-agent",
         "hitl-gate-agent",
@@ -128,7 +148,7 @@
         ".github/skills/jira-parser/SKILL.md"
       ]
     },
-    "qa-strategist-agent": {
+    "planning-agent": {
       "preHooks": [
         ".github/hooks/pre_stage_validation.py",
         ".github/hooks/artifact_contract_guard.py"
@@ -140,7 +160,7 @@
         ".github/skills/test-planning-strategist/SKILL.md"
       ]
     },
-    "qa-sentinel-agent": {
+    "test-design-agent": {
       "preHooks": [
         ".github/hooks/pre_stage_validation.py",
         ".github/hooks/artifact_contract_guard.py"
@@ -164,7 +184,7 @@
         ".github/skills/execution-evidence-writer/SKILL.md"
       ]
     },
-    "qa-runner-agent": {
+    "execution-agent": {
       "preHooks": [
         ".github/hooks/pre_stage_validation.py",
         ".github/hooks/approval_gate_guard.py"
@@ -238,6 +258,25 @@
     "stage-07": "stlc-pipeline/artifacts/hitl_audit_trail.md",
     "stage-08": "stlc-pipeline/artifacts/test_closure_metrics.md"
   },
+  "webDeliveryFlow": {
+    "skippedScope": ["orangehrm-login-e2e"],
+    "order": [
+      "stage-01",
+      "stage-02",
+      "stage-04a",
+      "stage-03",
+      "stage-05",
+      "stage-04b",
+      "stage-06",
+      "stage-07",
+      "stage-08"
+    ],
+    "reuseShortCircuit": {
+      "when": "story has built page in webapp/ and unit tests",
+      "skip": ["stage-02", "stage-04a", "stage-03"],
+      "then": ["stage-04b", "stage-05", "stage-06"]
+    }
+  },
   "stages": [
     {
       "id": "stage-01",
@@ -259,19 +298,19 @@
     {
       "id": "stage-02",
       "name": "Test Planning & Strategy",
-      "subagentPath": ".github/agents/02-qa-strategist-agent.agent.md",
+      "subagentPath": ".github/agents/02-planning-agent.agent.md",
       "commandPath": ".github/prompts/02-test-planning.prompt.md",
-      "agent": "qa-strategist-agent",
-      "artifact": "stlc-pipeline/artifacts/test_planning.md",
+      "agent": "planning-agent",
+      "artifact": "stlc-pipeline/artifacts/architecture_design.md",
       "handoff": "stage-03",
       "requiresHumanApprovalBeforeStart": true
     },
     {
       "id": "stage-03",
       "name": "Test Case Design & Generation",
-      "subagentPath": ".github/agents/03-qa-sentinel-agent.agent.md",
+      "subagentPath": ".github/agents/03-test-design-agent.agent.md",
       "commandPath": ".github/prompts/03-test-design.prompt.md",
-      "agent": "qa-sentinel-agent",
+      "agent": "test-design-agent",
       "artifact": "stlc-pipeline/artifacts/test_design.md",
       "handoff": "stage-04a",
       "requiresHumanApprovalBeforeStart": true
@@ -289,9 +328,9 @@
     {
       "id": "stage-04b",
       "name": "Test Execution & Evidence Collection",
-      "subagentPath": ".github/agents/04b-qa-runner-agent.agent.md",
+      "subagentPath": ".github/agents/04b-execution-agent.agent.md",
       "commandPath": ".github/prompts/04b-execution.prompt.md",
-      "agent": "qa-runner-agent",
+      "agent": "execution-agent",
       "artifact": "stlc-pipeline/artifacts/test_execution_report.md",
       "handoff": "stage-05",
       "requiresHumanApprovalBeforeStart": true
@@ -299,9 +338,9 @@
     {
       "id": "stage-04b-execution-only",
       "name": "Execution Summary for Existing Story Automation",
-      "subagentPath": ".github/agents/04b-qa-runner-agent.agent.md",
+      "subagentPath": ".github/agents/04b-execution-agent.agent.md",
       "commandPath": ".github/prompts/04b-execution.prompt.md",
-      "agent": "qa-runner-agent",
+      "agent": "execution-agent",
       "artifact": "stlc-pipeline/artifacts/test_execution_report.md",
       "requiresHumanApprovalBeforeStart": true
     },
@@ -317,7 +356,7 @@
     },
     {
       "id": "stage-06",
-      "name": "GitHub PR Creation & Automated Code Review",
+      "name": "Pull Request Creation",
       "subagentPath": ".github/agents/06-github-mcp-agent.agent.md",
       "commandPath": ".github/prompts/06-pr-review.prompt.md",
       "agent": "github-mcp-agent",

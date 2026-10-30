@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 public class STLCWorkflowOrchestrator {
     private final OrchestratorDefinition orchestrator = new OrchestratorDefinition(
-        "stlc-orchestrator-agent",
-        ".github/agents/00-stlc-orchestrator-agent.agent.md",
+        "delivery-orchestrator-agent",
+        ".github/agents/00-delivery-orchestrator-agent.agent.md",
         List.of(
             ".github/prompts/mcp-preflight.prompt.md",
             ".github/prompts/stlc.prompt.md"
@@ -20,10 +20,10 @@ public class STLCWorkflowOrchestrator {
         ),
         List.of(
             "triage-agent",
-            "qa-strategist-agent",
-            "qa-sentinel-agent",
+            "planning-agent",
+            "test-design-agent",
             "engineer-agent",
-            "qa-runner-agent",
+            "execution-agent",
             "security-gate-agent",
             "github-mcp-agent",
             "hitl-gate-agent",
@@ -52,7 +52,7 @@ public class STLCWorkflowOrchestrator {
         new StageNode(
             "stage-02",
             "Test Planning & Strategy",
-            "qa-strategist-agent",
+            "planning-agent",
             ".github/prompts/02-test-planning.prompt.md",
             List.of(".github/hooks/pre_stage_validation.py", ".github/hooks/artifact_contract_guard.py"),
             List.of(".github/skills/test-planning-strategist/SKILL.md"),
@@ -66,7 +66,7 @@ public class STLCWorkflowOrchestrator {
         new StageNode(
             "stage-03",
             "Test Case Design & Generation",
-            "qa-sentinel-agent",
+            "test-design-agent",
             ".github/prompts/03-test-design.prompt.md",
             List.of(".github/hooks/pre_stage_validation.py", ".github/hooks/artifact_contract_guard.py"),
             List.of(".github/skills/bdd-generator/SKILL.md"),
@@ -94,7 +94,7 @@ public class STLCWorkflowOrchestrator {
         new StageNode(
             "stage-04b",
             "Test Execution & Evidence Collection",
-            "qa-runner-agent",
+            "execution-agent",
             ".github/prompts/04b-execution.prompt.md",
             List.of(".github/hooks/pre_stage_validation.py", ".github/hooks/approval_gate_guard.py"),
             List.of(".github/skills/execution-evidence-writer/SKILL.md"),
@@ -108,7 +108,7 @@ public class STLCWorkflowOrchestrator {
         new StageNode(
             "stage-04b-execution-only",
             "Execution Summary for Existing Story Automation",
-            "qa-runner-agent",
+            "execution-agent",
             ".github/prompts/04b-execution.prompt.md",
             List.of(".github/hooks/pre_stage_validation.py", ".github/hooks/approval_gate_guard.py"),
             List.of(".github/skills/execution-evidence-writer/SKILL.md"),

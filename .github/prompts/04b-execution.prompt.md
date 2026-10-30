@@ -2,7 +2,7 @@
 name: stlc-execution
 description: Execute approved tests and record Stage 4b evidence.
 argument-hint: Jira issue key or approved execution input
-agent: qa-runner-agent
+agent: execution-agent
 ---
 
 Run Stage 4b for `${input:stlcExecutionInput:Enter a Jira issue key or artifact path}`.

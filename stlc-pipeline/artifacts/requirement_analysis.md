@@ -1,34 +1,24 @@
-# Requirement Analysis
+# Stage 01: Requirements Analysis and Triage - EPMCDMETST-66524
 
-## Stage
+Source: `stlc-pipeline/artifacts/runs/EPMCDMETST-66524/requirements.txt` (user-supplied; Jira not verified).
 
-Phase 1: Requirements Analysis & Triage
+## Acceptance criteria
+- AC1: Entering an existing book title and clicking search displays the correct book details.
+- AC2: Entering a non-existent book title displays a "No books found" message.
 
-## Jira Placeholders
+## Existing automation
+- `stlc-pipeline/src/test/resources/features/book_search.feature` lines 1-15: tagged `@EPMCDMETST-66524`; scenario tagged `@AC1` (existing book, "Java Programming") and scenario tagged `@AC2` (non-existent book, "No books found").
+- `stlc-pipeline/src/test/java/bookstore/BookSearchSteps.java`: step definitions exist for every step used by both scenarios (homepage Given, "searches for {string}", "book details for {string} are displayed", "message {string} is displayed").
 
-- Jira Issue Key: `<jiraIssueKey>`
-- Jira Project Key: `<jiraProjectKey>`
-- Feature Name: `<featureName>`
-- Module Name: `<moduleName>`
+## Traceability
+| AC | Scenario | Steps | Status |
+|---|---|---|---|
+| AC1 | book_search.feature, @AC1 | BookSearchSteps.java | Covered |
+| AC2 | book_search.feature, @AC2 | BookSearchSteps.java | Covered |
 
-## Acceptance Criteria
+## Gaps
+- No gaps between the two acceptance criteria and the existing scenarios.
+- Test execution has not been verified against a real Book Store target (see Stage 04b).
 
-1. `<acceptance-criterion-1>`
-2. `<acceptance-criterion-2>`
-
-## Existing Automation Mapping
-
-| Acceptance Criterion | Existing Asset | Path | Notes |
-| --- | --- | --- | --- |
-| `<criterion>` | `<test-name>` | `<path>` | `<mapping-notes>` |
-
-## Coverage Gaps
-
-- `<gap-1>`
-- `<gap-2>`
-
-## Recommended Test Scope
-
-- Unit: `<unit-scope>`
-- Integration: `<integration-scope>`
-- UI or BDD: `<ui-bdd-scope>`
+## Routing recommendation
+reuse-existing-tests

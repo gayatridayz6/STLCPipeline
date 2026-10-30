@@ -115,16 +115,16 @@
         <div class="artifact-stack">
             <div class="box orchestration">
                 <h3>Orchestration <span class="count">(1)</span></h3>
-                <div class="item code">.github/agents/00-stlc-orchestrator-agent.agent.md</div>
+                <div class="item code">.github/agents/00-delivery-orchestrator-agent.agent.md</div>
                 <div class="item" style="margin-top: 10px; font-size: 11px; color: #555;">
                     Main enterprise orchestrator running STLC pipeline end-to-end through stage subagents
                 </div>
                 <div class="item" style="margin-top: 8px; font-weight: 600;">Subagents:</div>
                 <div class="item">1. triage-agent</div>
-                <div class="item">2. qa-strategist-agent</div>
-                <div class="item">3. qa-sentinel-agent</div>
+                <div class="item">2. planning-agent</div>
+                <div class="item">3. test-design-agent</div>
                 <div class="item">4a. engineer-agent</div>
-                <div class="item">4b. qa-runner-agent</div>
+                <div class="item">4b. execution-agent</div>
                 <div class="item">5. security-gate-agent</div>
                 <div class="item">6. github-mcp-agent</div>
                 <div class="item">7. hitl-gate-agent</div>
@@ -156,8 +156,7 @@
             
             <div class="box mcp">
                 <h3>MCP References <span class="count">(2)</span></h3>
-                <div class="item code">.github/config/mcp/github_mcp_config.json</div>
-                <div class="item code" style="margin-top: 8px;">.github/config/mcp/jira_mcp_config.json</div>
+                <div class="item code">.github/config/mcp/.mcp.json</div>
                 <div class="item" style="margin-top: 8px; font-size: 11px; color: #555;">
                     Templates only; configure MCP in the active Copilot host
                 </div>
@@ -195,7 +194,7 @@
                 <div class="flow-item" style="border-left-color: #9b59b6;">
                     <div class="stage-num">Stage 2</div>
                     <div class="stage-name">Test Planning</div>
-                    <div class="stage-agent">qa-strategist-agent</div>
+                    <div class="stage-agent">planning-agent</div>
                     <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Risk-based plan</div>
                 </div>
                 
@@ -204,7 +203,7 @@
                 <div class="flow-item" style="border-left-color: #e74c3c;">
                     <div class="stage-num">Stage 3</div>
                     <div class="stage-name">Test Design & BDD</div>
-                    <div class="stage-agent">qa-sentinel-agent</div>
+                    <div class="stage-agent">test-design-agent</div>
                     <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Approved plan required</div>
                 </div>
                 
@@ -221,9 +220,9 @@
 
                 <div class="flow-item" style="border-left-color: #2ecc71;">
                     <div class="stage-num">Stage 4b</div>
-                    <div class="stage-name">Test Execution</div>
-                    <div class="stage-agent">qa-runner-agent</div>
-                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Run & Report Tests</div>
+                    <div class="stage-name">Unit Test Run</div>
+                    <div class="stage-agent">execution-agent</div>
+                    <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">Vitest + coverage report</div>
                 </div>
                 
                 <div class="arrow">→</div>
@@ -319,8 +318,8 @@
                 </div>
                 
                 <div class="stage-card">
-                    <h4>Stage 2: QA Strategist Agent Flow</h4>
-                    <span class="badge agent">Agent: qa-strategist-agent</span>
+                    <h4>Stage 2: Planning Agent Flow</h4>
+                    <span class="badge agent">Agent: planning-agent</span>
                     <span class="badge skill">Skill: test-planning-strategist</span>
                     <span class="badge cmd">Prompt: 02-test-planning.prompt.md</span>
                     <div style="margin-top: 10px; font-size: 11px;">
@@ -328,7 +327,7 @@
                         <strong>Gate:</strong> Human approval before progression
                     </div>
                     <div style="margin-top: 10px; font-size: 11px; background: #f5f5f5; padding: 8px; border-radius: 3px;">
-                        📁 Location: .github/agents/02-qa-strategist-agent.agent.md → prompts/02-test-planning.prompt.md
+                        📁 Location: .github/agents/02-planning-agent.agent.md → prompts/02-test-planning.prompt.md
                     </div>
                 </div>
                 

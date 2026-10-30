@@ -486,7 +486,7 @@
         status: "Execution Summary Only"
       },
       pipeline: {
-        orchestrator: "stlc-orchestrator-agent",
+        orchestrator: "delivery-orchestrator-agent",
         startedAt: "2026-09-24T10:00:00Z",
         lastUpdatedAt: "2026-09-24T10:18:00Z",
         completedStages: 4,
@@ -514,17 +514,17 @@
         totalTokens: 20940,
         estimatedCostUsd: 0.18,
         byAgent: [
-          { agent: "stlc-orchestrator-agent", tokens: 4850 },
+          { agent: "delivery-orchestrator-agent", tokens: 4850 },
           { agent: "triage-agent", tokens: 6020 },
-          { agent: "qa-runner-agent", tokens: 3910 },
+          { agent: "execution-agent", tokens: 3910 },
           { agent: "hitl-gate-agent", tokens: 1160 }
         ]
       },
       stages: [
         { name: "Stage 1", agent: "triage-agent", state: "completed", summary: "Detected existing generated tests for the Jira story." },
-        { name: "Stage 2", agent: "qa-strategist-agent", state: "skipped", summary: "Skipped due to story reuse policy." },
-        { name: "Stage 3", agent: "qa-sentinel-agent", state: "skipped", summary: "Skipped to avoid duplicate test generation." },
-        { name: "Stage 4b", agent: "qa-runner-agent", state: "completed", summary: "Execution summary produced from existing automation." },
+        { name: "Stage 2", agent: "planning-agent", state: "skipped", summary: "Skipped due to story reuse policy." },
+        { name: "Stage 3", agent: "test-design-agent", state: "skipped", summary: "Skipped to avoid duplicate test generation." },
+        { name: "Stage 4b", agent: "execution-agent", state: "completed", summary: "Execution summary produced from existing automation." },
         { name: "Stage 5", agent: "security-gate-agent", state: "pending", summary: "Waiting for downstream demo path." }
       ]
     };
